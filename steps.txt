@@ -1,0 +1,10 @@
+1. Register screen
+2. add email
+3. add backup keyword
+4. add pattern on image
+5. reconfirm pattern
+6. check patterns if match
+7. show account created confirmation
+8. redirect to login
+9. login
+10. show login confirmation
