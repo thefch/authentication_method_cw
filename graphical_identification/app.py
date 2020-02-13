@@ -7,7 +7,7 @@ app.debug = True
 
 @app.route('/')
 def index():
-    rsp = (render_template("index.html"))
+    rsp = make_response(render_template("index.html"))
 
 
     return rsp
