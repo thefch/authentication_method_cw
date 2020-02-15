@@ -6,23 +6,20 @@
     <script language="javascript" src="https://cdn.jsdelivr.net/npm/p5@0.10.2/lib/addons/p5.sound.min.js"></script>
     <script language="javascript" type="text/javascript" src="{{ url_for('static',filename='sketch.js') }}"></script>
     -->
-    
+
     <!-- Setting for the image's coordinates -->
     <script type="text/javascript">
-        function FindPosition(oElement)
-        {
-          if(typeof( oElement.offsetParent ) != "undefined")
-          {
-            for(var posX = 0, posY = 0; oElement; oElement = oElement.offsetParent)
-            {
-              posX += oElement.offsetLeft;
-              posY += oElement.offsetTop;
+
+        function FindPosition(oElement) {
+            if(typeof( oElement.offsetParent ) != "undefined") {
+                for(var posX = 0, posY = 0; oElement; oElement = oElement.offsetParent) {
+                    posX += oElement.offsetLeft;
+                    posY += oElement.offsetTop;
+                }
+                return [ posX, posY ];
             }
-              return [ posX, posY ];
-            }
-            else
-            {
-              return [ oElement.x, oElement.y ];
+            else{
+                return [ oElement.x, oElement.y ];
             }
         }
 
@@ -31,7 +28,9 @@
             var PosY = 0;
             var ImgPos;
             ImgPos = FindPosition(myImg);
-            if (!e) var e = window.event;
+            if (!e) {
+                var e = window.event;
+            }
             if (e.pageX || e.pageY) {
                 PosX = e.pageX;
                 PosY = e.pageY;
@@ -67,20 +66,22 @@
 
     <!-- Style the letter of the alphabet -->
     <style>
+        #main {width:100px; height: 100px; display: flex; flex-direction:row; }
+
+        .alpahabet { width: 20px; height: 20px; background: greenyellow; text-align:center; margin: 2px;}
+        .alpahabet:hover{ border: 2px solid blue; font-weight: bold; }
         #makeMeDraggable { width: 25px; height: 25px; background: red; }
-        #A { width: 25px; height: 25px; background: greenyellow; }
-        #B { width: 25px; height: 25px; background: greenyellow; }
-        #C { width: 25px; height: 25px; background: greenyellow; }
-        #D { width: 25px; height: 25px; background: greenyellow; }
-        #E { width: 25px; height: 25px; background: greenyellow; }
-        #F { width: 25px; height: 25px; background: greenyellow; }
-        #G { width: 25px; height: 25px; background: greenyellow; }
+
     </style>
     <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.5.0/jquery.min.js"></script>
     <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.8.9/jquery-ui.min.js"></script>
 
     <!-- Setting of the dragable letters  -->
     <script type="text/javascript">
+
+        {#var button = $(this).attr('id');
+        button.addEventListener('click', clickFunction);
+#}
         $( init );
 
         function init() {
@@ -90,7 +91,14 @@
             containment: 'document',
             stop: handleDragStop,
           } );
-          $('#A').draggable( {
+
+          $('.alpahabet').draggable( {
+            cursor: 'move',
+            containment: 'document',
+            stop: handleDragStop,
+
+          });
+          /*$('#A').draggable( {
             cursor: 'move',
             containment: 'document',
             stop: handleDragStop,
@@ -131,10 +139,12 @@
             containment: 'document',
             stop: handleDragStop,
 
-          });
+          });*/
         }
 
         function handleDragStop( event, ui ) {
+
+            
             var draggableId = $(this).attr('id');
 
             var offsetXPos = parseInt( ui.offset.left );
@@ -149,19 +159,43 @@
           //alert( "Drag stopped!nnOffset: (" + offsetXPos + ", " + offsetYPos + ")n");
         }
 
+        function clickFunction(event) {
+            console.log("asgsagaewty23423");
+            var draggableId = $(this).attr('id');
+            var button = event.currentTrarget;
+            button.querySelector('id').style.border = 'border: 2px solid blue';
+        }
     </script>
 
     <!-- Declare the letters -->
-    <div id="content" style="height: 100px;">
+    <div id="main" >
         <div id="makeMeDraggable">test</div>
-        <div id="A" >A</div>
-        <div id="B" >B</div>
-        <div id="C" >C</div>
-        <div id="D" >D</div>
-        <div id="E" >E</div>
-        <div id="F" >F</div>
-        <div id="G" >G</div>
-
+        <div class="alpahabet" id="A" >A</div>
+        <div class="alpahabet" id="B" >B</div>
+        <div class="alpahabet" id="C" >C</div>
+        <div class="alpahabet" id="D" >D</div>
+        <div class="alpahabet" id="E" >E</div>
+        <div class="alpahabet" id="F" >F</div>
+        <div class="alpahabet" id="G" >G</div>
+        <div class="alpahabet" id="H" >H</div>
+        <div class="alpahabet" id="I" >I</div>
+        <div class="alpahabet" id="J" >J</div>
+        <div class="alpahabet" id="K" >K</div>
+        <div class="alpahabet" id="L" >L</div>
+        <div class="alpahabet" id="M" >M</div>
+        <div class="alpahabet" id="N" >N</div>
+        <div class="alpahabet" id="O" >O</div>
+        <div class="alpahabet" id="P" >P</div>
+        <div class="alpahabet" id="Q" >Q</div>
+        <div class="alpahabet" id="R" >R</div>
+        <div class="alpahabet" id="S" >S</div>
+        <div class="alpahabet" id="T" >T</div>
+        <div class="alpahabet" id="U" >U</div>
+        <div class="alpahabet" id="V" >V</div>
+        <div class="alpahabet" id="W" >W</div>
+        <div class="alpahabet" id="X" >X</div>
+        <div class="alpahabet" id="Y" >Y</div>
+        <div class="alpahabet" id="Z" >Z</div>
     </div>
 
 </html>
