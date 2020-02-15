@@ -1,7 +1,167 @@
 <html>
     <h1>Hello</h1>
+    <!--
     <script language="javascript" type="text/javascript" src="https://cdn.jsdelivr.net/npm/p5@0.10.2/lib/p5.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/0.5.2/addons/p5.dom.min.js">
     <script language="javascript" src="https://cdn.jsdelivr.net/npm/p5@0.10.2/lib/addons/p5.sound.min.js"></script>
     <script language="javascript" type="text/javascript" src="{{ url_for('static',filename='sketch.js') }}"></script>
+    -->
+    
+    <!-- Setting for the image's coordinates -->
+    <script type="text/javascript">
+        function FindPosition(oElement)
+        {
+          if(typeof( oElement.offsetParent ) != "undefined")
+          {
+            for(var posX = 0, posY = 0; oElement; oElement = oElement.offsetParent)
+            {
+              posX += oElement.offsetLeft;
+              posY += oElement.offsetTop;
+            }
+              return [ posX, posY ];
+            }
+            else
+            {
+              return [ oElement.x, oElement.y ];
+            }
+        }
+
+        function GetCoordinates(e) {
+            var PosX = 0;
+            var PosY = 0;
+            var ImgPos;
+            ImgPos = FindPosition(myImg);
+            if (!e) var e = window.event;
+            if (e.pageX || e.pageY) {
+                PosX = e.pageX;
+                PosY = e.pageY;
+            } else if (e.clientX || e.clientY) {
+                PosX = e.clientX + document.body.scrollLeft
+                    + document.documentElement.scrollLeft;
+                PosY = e.clientY + document.body.scrollTop
+                    + document.documentElement.scrollTop;
+            }
+            PosX = PosX - ImgPos[0];
+            PosY = PosY - ImgPos[1];
+            document.getElementById("x").innerHTML = PosX;
+            document.getElementById("y").innerHTML = PosY;
+        }
+    </script>
+
+    <!-- Declare the image tag -->
+    <img id="myImgId" alt="" src="../static/kitten.jpg" width="400" height="300" />
+
+    <!-- Action of mouse when clicking on the image -->
+    <script type="text/javascript">
+
+        var myImg = document.getElementById("myImgId");
+        myImg.onmousedown = GetCoordinates;
+
+    </script>
+
+    <!-- Show the coordinates in the screen -->
+    <p>X:<span id="x"></span></p>
+    <p>Y:<span id="y"></span></p>
+    <p>X_letter:<span id="x_letter"></span></p>
+    <p>Y_letter:<span id="y_letter"></span></p>
+
+    <!-- Style the letter of the alphabet -->
+    <style>
+        #makeMeDraggable { width: 25px; height: 25px; background: red; }
+        #A { width: 25px; height: 25px; background: greenyellow; }
+        #B { width: 25px; height: 25px; background: greenyellow; }
+        #C { width: 25px; height: 25px; background: greenyellow; }
+        #D { width: 25px; height: 25px; background: greenyellow; }
+        #E { width: 25px; height: 25px; background: greenyellow; }
+        #F { width: 25px; height: 25px; background: greenyellow; }
+        #G { width: 25px; height: 25px; background: greenyellow; }
+    </style>
+    <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.5.0/jquery.min.js"></script>
+    <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.8.9/jquery-ui.min.js"></script>
+
+    <!-- Setting of the dragable letters  -->
+    <script type="text/javascript">
+        $( init );
+
+        function init() {
+
+          $('#makeMeDraggable').draggable( {
+            cursor: 'move',
+            containment: 'document',
+            stop: handleDragStop,
+          } );
+          $('#A').draggable( {
+            cursor: 'move',
+            containment: 'document',
+            stop: handleDragStop,
+
+          });
+          $('#B').draggable( {
+            cursor: 'move',
+            containment: 'document',
+            stop: handleDragStop,
+
+          });
+          $('#C').draggable( {
+            cursor: 'move',
+            containment: 'document',
+            stop: handleDragStop,
+
+          });
+          $('#D').draggable( {
+            cursor: 'move',
+            containment: 'document',
+            stop: handleDragStop,
+
+          });
+          $('#E').draggable( {
+            cursor: 'move',
+            containment: 'document',
+            stop: handleDragStop,
+
+          });
+          $('#F').draggable( {
+            cursor: 'move',
+            containment: 'document',
+            stop: handleDragStop,
+
+          });
+          $('#G').draggable( {
+            cursor: 'move',
+            containment: 'document',
+            stop: handleDragStop,
+
+          });
+        }
+
+        function handleDragStop( event, ui ) {
+            var draggableId = $(this).attr('id');
+
+            var offsetXPos = parseInt( ui.offset.left );
+            var offsetYPos = parseInt( ui.offset.top );
+
+            console.log(' \n');
+            console.log(draggableId);
+            console.log('x:',offsetXPos);
+            console.log('y:',offsetYPos);
+            document.getElementById("x_letter").innerHTML = offsetXPos;
+            document.getElementById("y_letter").innerHTML = offsetYPos;
+          //alert( "Drag stopped!nnOffset: (" + offsetXPos + ", " + offsetYPos + ")n");
+        }
+
+    </script>
+
+    <!-- Declare the letters -->
+    <div id="content" style="height: 100px;">
+        <div id="makeMeDraggable">test</div>
+        <div id="A" >A</div>
+        <div id="B" >B</div>
+        <div id="C" >C</div>
+        <div id="D" >D</div>
+        <div id="E" >E</div>
+        <div id="F" >F</div>
+        <div id="G" >G</div>
+
+    </div>
+
 </html>

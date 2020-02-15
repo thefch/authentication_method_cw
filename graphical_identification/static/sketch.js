@@ -24,10 +24,27 @@ function setup(){
 
     initGrid();
 }
+function drawTable() {
+    var x = 30;
+    var y = 20;
+    var t = '<table cellspacing="0" border="1" cellpadding="0" class="grxd">';
+    for (var i = 1; i <= (x * y); i++) {
+        t += (i == 1 ? '<tr>' : '');
+        t += '<td style="cursor:pointer;"></td>';
+        if (i == (x * y)) {
+            t += '</tr>';
+        } else {
+            t += (i % 30 === 0 ? '</tr><tr>' : '');
+        }
 
+    }
+    t += '</table>';
+    $("#drawTable").html(t);
+}
 function draw(){
     //background(100,200,50);
-    image(img, 0, 0);
+    //image(img, 0, 0);
+    image(img,0,0 , img.width, img.height);
     drawGrid();
 }
 
