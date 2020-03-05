@@ -14,7 +14,7 @@ def index():
     print("lower alphabet:", lower_letters)
 
     rsp = make_response(render_template("index.html", value=upper_letters))
-
+    rsp = make_response(render_template("gridtemp.html"))
     return rsp
 
 
