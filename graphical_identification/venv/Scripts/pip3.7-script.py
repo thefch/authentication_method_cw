@@ -1,4 +1,4 @@
-#!"C:\Users\Fanos\Desktop\University\UEA - Year 3\Develop secure software\CW_indivisual\graphical_identification\venv\Scripts\python.exe"
+#!"C:\Users\theof\Desktop\University\Develop Secure Software\CW_invidual\authentication_method_cw\graphical_identification\venv\Scripts\python.exe"
 # EASY-INSTALL-ENTRY-SCRIPT: 'pip==19.0.3','console_scripts','pip3.7'
 __requires__ = 'pip==19.0.3'
 import re

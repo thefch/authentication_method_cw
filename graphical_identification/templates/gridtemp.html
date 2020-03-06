@@ -4,9 +4,19 @@
 
 <span>Select a cell!</span>
 <div id="tableContainer"></div>
-
+<button type="button" id="showGrid_btn" value="Show Grid" onclick="showHideGrid(this)">Show</button>
 
 <script>
+    function showHideGrid(elem){
+        gridID = document.getElementById("tableContainer");
+        if (gridID === "1px"){
+            console.log(gridID);
+        }else{
+            console.log("in function");
+        }
+    }
+
+
     function generateGrid( rows, cols ) {
         var grid = "<table>";
         for ( row = 1; row <= rows; row++ ) {
@@ -16,36 +26,35 @@
             }
             grid += "</tr>";
         }
+        grid += "</table>";
         return grid;
     }
 
-$("#tableContainer").append(generateGrid( 10, 10));
+    $("#tableContainer").append(generateGrid( 10, 10));
 
-$( "td" ).click(function() {
-    var index = $( "td" ).index( this );
-    var row = Math.floor( ( index ) / 5) + 1;
-    var col = ( index % 5 ) + 1;
-    $( "span" ).text( "That was row " + row + " and col " + col );
-    $( this ).css( 'background-color', 'red' );
-});
+    $( "td" ).click(function() {
+        var index = $( "td" ).index( this );
+        var row = Math.floor( ( index ) / 5) + 1;
+        var col = ( index % 5 ) + 1;
+        $( "span" ).text( "That was row " + row + " and col " + col );
+
+        if ( (this).style.backgroundColor === 'red'){
+            $( this ).css( 'background-color', 'red' );
+        }
+        else{
+            $( this ).css( 'background-color', 'red' );
+        }
+    });
 
 document.addEventListener('keydown', function(event) {
-  /*if (event.keyCode == 37) {
-    alert('Left was pressed');
-
-  } else if (event.keyCode == 39) {
-    alert('Right was pressed');
-  }*/
   console.log("key pressed:",event.key);
 }, true);
 
 </script>
 
 <style>
-    td {
-        border: 1px solid;
-        width: 50px;
-        height: 50px;
-    }
+
+    td {border: 1px solid;  width: 40px; height: 40px; }
+
 </style>
 </html>
