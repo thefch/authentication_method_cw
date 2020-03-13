@@ -1,108 +1,64 @@
 <!DOCTYPE html>
-<html lang="en">
-<link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
+<html>
+<head>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
+    <script src="{{ url_for('.static',filename='displayGrid.js') }}"></script>
+    <script src="{{ url_for('.static',filename='initGrid.js') }}"></script>
+    <script src="{{ url_for('.static',filename='update.js') }}"></script>
 
-
+    <title>Login</title>
+</head>
 
 <body>
     <div>
         <i class="material-icons" id="gridOffID" >grid_off</i>
-        <i class="material-icons" id="gridOnID">grid_on</i>
+        <i class="material-icons" id="gridOnID" >grid_on</i>
     </div>
 
     <div>
         <!-- Rectangular switch -->
         <label class="switch">
-            <input type="checkbox" onchange="showHideGrid(this)">
+            <input type="checkbox" onchange="displayGrid(this)">
             <span class="slider"></span>
         </label>
     </div>
 
+    <div class="password-container">
+        <h3 id="grid-keyword">Grid-keyword:</h3>
+        <h3 id="keydown-keyword">Keydown-keyword</h3>
+
+        <h3 id="entered-keys">Entered:</h3>
+    </div>
+
+<!--
+    <form>
+        <input type="hidden" value="" onchange="update_keyword(this)">
+    </form>
+-->
 </body>
 
 <script>
-    function  showHideGrid(elem) {
-        if (elem.checked){
-            var on = document.getElementById("gridOnID");
-            on.visibility = "visible";
-            var off = document.getElementById("gridOffID");
-            off.visibility = 'hidden';
-            console.log(on,off);
-        }
-        else{
-            var x = document.getElementById("gridOffID");
-            x.visibility = "";
-        }
-        console.log(elem.checked);
-    }
+    document.addEventListener('keydown', function(event) {
+        update_keyword('keydown',event.key);
+
+    }, true);
 </script>
 
-<script>
-    window.onload =()=> {
-        var lastClicked;
 
-        var grid = clickableGrid(10, 10, function (el, row, col, i) {
-            //console.log("You clicked on element:", el);
-            //console.log("You clicked on row:", row);
-            //console.log("You clicked on col:", col);
-            console.log("You clicked on item #:", i);
 
-            el.className = 'clicked';
-            if (lastClicked)
-                lastClicked.className = '';
-            lastClicked = el;
-        });
 
-        document.body.appendChild(grid);
 
-        //init clickable grid
-        function clickableGrid(rows, cols, callback) {
-            var i = 0;
-            var grid = document.createElement('table');
-            grid.className = 'grid';
-            for (var r = 0; r < rows; ++r) {
-                var tr = grid.appendChild(document.createElement('tr'));
-                for (var c = 0; c < cols; ++c) {
-                    var cell = tr.appendChild(document.createElement('td'));
-                    //cell.innerHTML = ++i;
-                    cell.value = ++i;
-                    cell.addEventListener('click', (function (el, r, c, i) {
-                        return function () {
-
-                            callback(el, r, c, i);
-                        }
-                    })(cell, r, c, i), false);
-                }
-            }
-            return grid;
-        }
-    }
-
-</script>
 
 <style>
-    #gridOffID{visibility: visible;}
-    #gridOnID{visibility: hidden;}
-</style>
-
-<!-- style for GRID -->
-<style>
-    .grid { margin:1em auto; border-collapse:collapse }
-    .grid td {
-        cursor:pointer;
-        width:30px; height:30px;
-        border:1px solid #ccc;
-        text-align:center;
-        font-family:sans-serif; font-size:13px
+    #gridOffID{
+        visibility: visible;
     }
-    .grid td.clicked {
-        background-color:yellow;
-        font-weight:bold; color:red;
-    }
-</style>
 
-<!-- slider style -->
-<style>
+    #gridOnID{
+        visibility: hidden;
+        margin-left: 10px;
+    }
+
     /* The switch - the box around the slider */
     .switch {
         position: relative;
@@ -165,5 +121,46 @@
     .slider.round:before {
         border-radius: 50%;
     }
+
+
+    /*<!-- style for GRID -->*/
+    .grid {
+        margin:1em auto;
+        border-collapse:collapse;
+        background-image: url({{ img_path }});
+        background-size: 100%;
+    }
+
+    .grid td {
+        cursor:pointer;
+        width:30px;
+        height:30px;
+        border:1px solid #ccc;
+        text-align:center;
+        font-family:sans-serif; font-size:13px;
+    }
+    .grid td.clicked {
+        /*
+        background-color: yellow;
+        font-weight: bold;
+        color: red;
+         */
+
+        animation:blinkingText 0.2s;
+
+    }
+    @keyframes blinkingText{
+        0%  {   background-color: white;        opacity: 0.2; }
+        49% {   background-color: white;        opacity: 0.2; }
+        60% {   background-color: transparent;  opacity: 0.2;}
+        99% {   background-color: transparent;  opacity: 0.2;}
+        100%{   background-color: white;        opacity: 0.2; }
+    }
+
+    .grid td.clicked::after{
+        border-style: solid;
+    }
 </style>
+
+
 </html>

@@ -6,16 +6,12 @@ app.debug = True
 
 @app.route('/')
 def index():
-    # upper_letters = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T',
-    #                  'U', 'V', 'W', 'X', 'Y', 'Z']
-    # lower_letters = [x.lower() for x in upper_letters]
-    #
-    # print("upper alphabet:", upper_letters)
-    # print("lower alphabet:", lower_letters)
 
-    rsp = make_response(render_template("index.html"))
-    rsp = make_response(render_template("gridtemp.html"))
-    rsp = make_response(render_template("gridv2.html"))
+    # rsp = make_response(render_template("index.html"))
+    # rsp = make_response(render_template("gridtemp.html"))
+
+    img_path = "static/kitten.jpg"
+    rsp = make_response(render_template("gridv2.html", img_path=img_path))
     return rsp
 
 
