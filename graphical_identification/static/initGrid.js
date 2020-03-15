@@ -13,9 +13,17 @@ window.onload = () => {
 
 
         el.className = 'clicked';
+
+        // show hide selected cell's point
+        var span = el.children[0];
+        span.style.display = span.style.display === 'none' ? 'block' : 'none';
+
         if (lastClicked)
             lastClicked.className = '';
         lastClicked = el;
+
+       // document.getElementById(el.id).style.borderStyle = "solid";
+
     });
 
     document.body.appendChild(grid);
@@ -37,14 +45,20 @@ window.onload = () => {
                 cell.style.borderStyle = 'hidden';
                 cell.value = ++i;
                 //cell.onclick();
+
+                var span = cell.appendChild(document.createElement('span'));
+                span.className='dot';
+                span.style.display = 'none';
+
                 cell.addEventListener('click', (function (el, r, c, i) {
 
                     return function () {
+
+
                         callback(el, r, c, i);
-
                     }
-
-                })(cell, r, c, i), false);
+                })
+                (cell, r, c, i), false);
             }
         }
 

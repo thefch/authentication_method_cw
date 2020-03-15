@@ -16,7 +16,6 @@ function showGrid(){
 
     document.getElementById("gridOnID").style.visibility = 'visible';
     document.getElementById("gridOffID").style.visibility = 'hidden';
-
 }
 
 function hideGrid(){
@@ -28,4 +27,11 @@ function hideGrid(){
     document.getElementById("gridOnID").style.visibility = 'hidden';
     document.getElementById("gridOffID").style.visibility = 'visible';
 
+}
+
+function showHidePoint(elem){
+    console.log('in show hide point');
+    if(elem.style.display === '')
+        elem.style.display = 'block';
+    else elem.style.display = elem.style.display === 'none' ? 'block' : 'none'
 }
