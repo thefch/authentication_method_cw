@@ -2,12 +2,13 @@
 
 //function loadGrid(elem) {
 window.onload = () => {
-    var lastClicked;
+    let rowsCols = 40;
+    let lastClicked;
     //console.log('grid:',elem);
-    var grid = clickableGrid(10, 10, function (el, row, col, i) {
+    const grid = clickableGrid(rowsCols, rowsCols, function (el, row, col, i) {
         console.log("You clicked on item:", i);
 
-        update_keyword('click',i);
+        update_keyword('click', i);
         //document.getElementById('entered-password').append(r);
         //console.log(document.getElementById('entered-password').textContent);
 
@@ -22,7 +23,7 @@ window.onload = () => {
             lastClicked.className = '';
         lastClicked = el;
 
-       // document.getElementById(el.id).style.borderStyle = "solid";
+        // document.getElementById(el.id).style.borderStyle = "solid";
 
     });
 
@@ -30,23 +31,23 @@ window.onload = () => {
 
     //init clickable grid
     function clickableGrid(rows, cols, callback) {
-        var i = 0;
-        var grid = document.createElement('table');
+        let i = 0;
+        const grid = document.createElement('table');
         grid.className = 'grid';
         grid.id = 'grid-id';
 
-        for (var r = 0; r < rows; ++r) {
-            var tr = grid.appendChild(document.createElement('tr'));
+        for (let r = 0; r < rows; ++r) {
+            let tr = grid.appendChild(document.createElement('tr'));
 
-            for (var c = 0; c < cols; ++c) {
-                var cell = tr.appendChild(document.createElement('td'));
+            for (let c = 0; c < cols; ++c) {
+                let cell = tr.appendChild(document.createElement('td'));
                 cell.className = 'cell';
                 cell.id = 'cell-id';
                 cell.style.borderStyle = 'hidden';
                 cell.value = ++i;
                 //cell.onclick();
 
-                var span = cell.appendChild(document.createElement('span'));
+                let span = cell.appendChild(document.createElement('span'));
                 span.className='dot';
                 span.style.display = 'none';
 
