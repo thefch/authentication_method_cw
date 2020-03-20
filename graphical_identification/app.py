@@ -19,9 +19,15 @@ def update_image():
 def check_login():
     try:
         grid_keyword = request.form["grid_keyword"]
+        keydown_keyword = request.form["keydown_keyword"]
+        entered_keyword = request.form["entered_keyword"]
+
         print(grid_keyword)
+        print(keydown_keyword)
+        print(entered_keyword)
+
     except Exception as e:
-        raise e
+            raise e
 
     img_path = "static/images/kitten.jpg"
     path = os.path.abspath(img_path)
