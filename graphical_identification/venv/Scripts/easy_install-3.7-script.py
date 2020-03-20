@@ -1,4 +1,4 @@
-#!"C:\Users\theof\Desktop\University\Develop Secure Software\CW_invidual\authentication_method_cw\graphical_identification\venv\Scripts\python.exe"
+#!"C:\Users\Fanos\Desktop\University\UEA - Year 3\Develop secure software\CW_indivisual\graphical_identification\venv\Scripts\python.exe"
 # EASY-INSTALL-ENTRY-SCRIPT: 'setuptools==40.8.0','console_scripts','easy_install-3.7'
 __requires__ = 'setuptools==40.8.0'
 import re

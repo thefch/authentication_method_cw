@@ -27,7 +27,7 @@ function global:deactivate ([switch]$NonDestructive) {
 
 deactivate -nondestructive
 
-$env:VIRTUAL_ENV="C:\Users\theof\Desktop\University\Develop Secure Software\CW_invidual\authentication_method_cw\graphical_identification\venv"
+$env:VIRTUAL_ENV="C:\Users\Fanos\Desktop\University\UEA - Year 3\Develop secure software\CW_indivisual\graphical_identification\venv"
 
 if (! $env:VIRTUAL_ENV_DISABLE_PROMPT) {
     # Set the prompt to include the env name
