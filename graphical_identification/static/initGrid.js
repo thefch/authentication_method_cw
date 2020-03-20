@@ -6,35 +6,39 @@ window.onload = () => {
     let lastClicked;
     //console.log('grid:',elem);
     const grid = clickableGrid(rowsCols, rowsCols, function (el, row, col, i) {
-        console.log("You clicked on item:", i);
+        //console.log("You clicked on item:", i);
 
-        update_keyword('click', i);
-        //document.getElementById('entered-password').append(r);
-        //console.log(document.getElementById('entered-password').textContent);
+        if(el.className === 'clicked'){
+            el.className = '';
+        }else{
+            el.className = 'clicked'
+        }
 
 
-        el.className = 'clicked';
+        update_keyword(el,'click', i);
+
 
         // show hide selected cell's point
         var span = el.children[0];
         span.style.display = span.style.display === 'none' ? 'block' : 'none';
 
-        if (lastClicked)
-            lastClicked.className = '';
-        lastClicked = el;
+        // if (lastClicked)
+        //     lastClicked.className = '';
+        //     //lastClicked.className = 'unClicked';
+        // lastClicked = el;
 
         // document.getElementById(el.id).style.borderStyle = "solid";
 
     });
 
-    document.body.appendChild(grid);
-
+    //document.body.appendChild(grid);
     //init clickable grid
     function clickableGrid(rows, cols, callback) {
         let i = 0;
-        const grid = document.createElement('table');
-        grid.className = 'grid';
-        grid.id = 'grid-id';
+        //const grid = document.createElement('table');
+        const grid = document.getElementById('grid-id');
+        //grid.className = 'grid';
+        //grid.id = 'grid-id';
 
         for (let r = 0; r < rows; ++r) {
             let tr = grid.appendChild(document.createElement('tr'));
@@ -65,5 +69,8 @@ window.onload = () => {
 
         return grid;
     }
+
+    //document.getElementById('grid-id').appendChild(grid);
+
 };
 

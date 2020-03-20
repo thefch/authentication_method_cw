@@ -13,6 +13,12 @@ class Database:
     def __init__(self):
         self.connection = self.connect()
 
+    def __delete__(self):
+        cur = self.connection.cursor()
+        cur.close()
+        self.connection.close()
+        print("Database disconnected!")
+
     @staticmethod
     def connect():
         conn = None
@@ -64,8 +70,8 @@ class Database:
 
     # returns an Account object
     def get_account(self, username: str, user_id=-1) -> Account:
-        con = self.connect()
-        cur = con.cursor()
+
+        cur = self.connection.cursor()
 
         if user_id != -1:
             query = """SELECT * FROM accounts_tb WHERE id=?"""
@@ -85,14 +91,12 @@ class Database:
         except Error as err:
             raise err
 
-        cur.close()
-        con.close()
         return account
 
     # returns an Accounts id
     def get_account_id(self, username: str) -> int:
-        con = self.connect()
-        cur = con.cursor()
+
+        cur = self.connection.cursor()
 
         query = "SELECT * FROM accounts_tb WHERE username=?"
         args = (username,)
@@ -162,9 +166,6 @@ class Database:
             successful = True
         except Error as err:
             print(err)
-
-        cursor.close()
-        conn.close()
 
         return successful
 
@@ -285,19 +286,15 @@ class Database:
         print("Stored blob data into: ", filename, "\n")
 
 
-testing = False
 if __name__ == '__main__':
     testing = True
     PATH = '../../database/db.sqlite3'
     img_path = "../../static/images/kitten.jpg"
-    database = Database()
-    img = Image(img_path)
-    acc = Account('test','KEYWQORd')
+    # database = Database()
+    # img = Image(img_path)
+    # acc = Account('test','KEYWQORd')
     # empPhoto = convertToBinaryData(img_path)
     # database.add_image_entry(empPhoto, 1)
 
     # database.get_image_entry(1)
-    database.get_image_entry(1)
-
-if not testing:
-    database = Database()
+    # database.get_image_entry(1)

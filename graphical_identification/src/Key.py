@@ -2,5 +2,8 @@ import enum
 
 
 class Key(enum.Enum):
-    CLICK = 1
-    KEYDOWN = 2
+    CLICK = 0
+    KEYDOWN = 1
+
+    def __str__(self):
+        return self.name
