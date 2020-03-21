@@ -8,6 +8,8 @@
     <title>Login</title>
 </head>
 
+<h1>Login Page</h1>
+
 <body>
     <div>
         <i class="material-icons" id="gridOffID" >grid_off</i>
@@ -28,7 +30,7 @@
         <h3 id="entered-keys">Entered:</h3>
     </div>
 
-    <div id="gird-container" style="display: table">
+    <div id="grid-container" style="display: table">
         <img src="../static/loading.gif" id="loading-gif">
         <table class="grid" id="grid-id"></table>
     </div>
@@ -39,7 +41,7 @@
         <input type="hidden" id="keydown_keyword" name="keydown_keyword">
         <input type="hidden" id="entered_keyword" name="entered_keyword">
 
-        <input type="submit" value="Login" onclick=initValues(this)>
+        <input type="submit" id="login-btn" value="Login" onclick=initValues(this)>
 
     </form>
 </body>
@@ -75,8 +77,15 @@
         margin-left: 10px;
     }
 
-    #gird-container{
+    #grid-container{
         border: 2px solid black;
+        position: relative;
+        margin-left:auto;
+        margin-right:auto;
+    }
+
+    #login-btn{
+        text-align:center;
     }
 
     /* The switch - the box around the slider */
