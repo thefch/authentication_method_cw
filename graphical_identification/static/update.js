@@ -1,14 +1,7 @@
 var click_indexes = [];
 var key_indexes = [];
-/*
-    TODO:
-        fix the backspace
 
-
- */
 function update_keyword(elem,key_val,value) {
-    //console.log(key_val,value);
-
     if(key_val === "click"){
         if (elem.className === 'clicked') {
             addClick(value);
@@ -20,50 +13,62 @@ function update_keyword(elem,key_val,value) {
         if(value === "Backspace"){
             removeKey(value);
         }else{
+
             addKey(value);
         }
     }
 }
 
 function addKey(value) {
-    let tempValue = value.toString()+'/';
-    let tempKeydown = 'K'+'/';
+    if(value.length>1){
+        return
+    }
+    let i = value.toString().charCodeAt(0);
+    console.log(value,i);
+    let tempValue = value.toString() + '/';
+    let tempKeydown = 'K' + '/';
     document.getElementById('keydown-keyword').append(tempValue);
     document.getElementById('entered-keys').append(tempKeydown);
 
 
-    key_indexes.push([value,document.getElementById('entered-keys').textContent.length-2]);
+    key_indexes.push([value, document.getElementById('entered-keys').textContent.length - 2]);
+
 }
 
 function removeKey(value){
-    let keydown_text = document.getElementById('keydown-keyword').textContent;
-    keydown_text = replaceChar(keydown_text,'',keydown_text.length-2);
-    document.getElementById('keydown-keyword').textContent = keydown_text;
+        try {
+            let last = key_indexes[key_indexes.length - 1][0];
+            console.log(last);
 
-    let last = key_indexes[key_indexes.length-1][0];
-    // console.log('value',last);
-    // console.log('index:',getIndex(last,'keydown'));
+            let keydown_text = document.getElementById('keydown-keyword').textContent;
+            keydown_text = replaceChar(keydown_text, '', keydown_text.length - 2);
+            document.getElementById('keydown-keyword').textContent = keydown_text;
 
-    let entered_keys_txt = document.getElementById('entered-keys').textContent;
-    let index = getIndex(last,'keydown');
-    console.log('index:',index);
+            // console.log('value',last);
+            // console.log('index:',getIndex(last,'keydown'));
 
-    entered_keys_txt = replaceChar(entered_keys_txt,'',index[0]);
-    document.getElementById('entered-keys').textContent = entered_keys_txt;
-    //console.log(key_indexes[key_indexes.length-1][1]);
+            let entered_keys_txt = document.getElementById('entered-keys').textContent;
+            let index = getIndex(last, 'keydown');
+            console.log('index:', index);
 
-    key_indexes.pop();
+            entered_keys_txt = replaceChar(entered_keys_txt, '', index[0]);
+            document.getElementById('entered-keys').textContent = entered_keys_txt;
+            //console.log(key_indexes[key_indexes.length-1][1]);
 
-    console.log('key indexes:',key_indexes);
+            key_indexes.pop();
+
+            console.log('key indexes:', key_indexes);
+
+        } catch (error) {
+            console.log(error);
+        }
 
     /*
-    1. get the last button entered
-    2. remove it from keydown txt
-    3. get its index for the entered keyword
-    4. remove it
-
+        1. get the last button entered
+        2. remove it from keydown txt
+        3. get its index for the entered keyword
+        4. remove it
      */
-
 }
 
 function addClick(value) {

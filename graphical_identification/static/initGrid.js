@@ -14,9 +14,7 @@ window.onload = () => {
             el.className = 'clicked'
         }
 
-
         update_keyword(el,'click', i);
-
 
         // show hide selected cell's point
         var span = el.children[0];
@@ -70,6 +68,8 @@ window.onload = () => {
         return grid;
     }
 
+
+    document.getElementById('loading-gif').hidden = "hidden";
     //document.getElementById('grid-id').appendChild(grid);
 
 };

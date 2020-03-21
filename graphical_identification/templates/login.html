@@ -5,7 +5,6 @@
     <script src="{{ url_for('.static',filename='displayGrid.js') }}"></script>
     <script src="{{ url_for('.static',filename='initGrid.js') }}"></script>
     <script src="{{ url_for('.static',filename='update.js') }}"></script>
-
     <title>Login</title>
 </head>
 
@@ -30,6 +29,7 @@
     </div>
 
     <div id="gird-container" style="display: table">
+        <img src="../static/loading.gif" id="loading-gif">
         <table class="grid" id="grid-id"></table>
     </div>
 
@@ -73,6 +73,10 @@
     #gridOnID{
         visibility: hidden;
         margin-left: 10px;
+    }
+
+    #gird-container{
+        border: 2px solid black;
     }
 
     /* The switch - the box around the slider */
@@ -162,12 +166,14 @@
         height: 15px;
         width: 15px;
 
-        background-color: white;
+        background-color: red;
         border-radius: 30%;
         text-align: center;
         display: none;
-        opacity: 0.2;
+        /*opacity: 0.2;
 
+
+         */
     }
 </style>
 
