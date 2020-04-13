@@ -1,0 +1,3 @@
+pip install Flask
+pip install python-resize-image
+pip install Flask-Session

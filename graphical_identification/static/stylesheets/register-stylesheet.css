@@ -1,0 +1,81 @@
+#import-img{
+    text-align: center;
+    position: absolute;
+}
+
+#img_file-btn{
+    display: block;
+    max-width: 300px;
+    margin: auto;
+    /*top: 10000px;*/
+    /*left: 50px;*/
+}
+
+/* Make the image responsive */
+.img-container-p img {
+    width: 400px;
+    height: 400px;
+}
+
+#images-tb {
+    display: block;
+    border: 2px solid #1c87c9;
+    margin-left: 25%;
+    float: left;
+}
+
+#images-tb td {
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.img-container-p{
+    text-align: center;
+}
+
+#external-image-container {
+    display: none;
+
+}
+#external-image {
+    display: inherit;
+    margin-left: auto;
+    margin-right: auto;
+    width: 700px;
+    height: 700px;
+
+}
+
+/* Style the button and place it in the middle of the container/image */
+#external-image-container .x-btn {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    -ms-transform: translate(-50%, -50%);
+    background-color: #555;
+    color: white;
+    font-size: 16px;
+    padding: 12px 24px;
+    border: none;
+    cursor: pointer;
+    border-radius: 5px;
+    opacity: 0.4;
+}
+
+#external-image-container .x-btn:hover {
+    background-color: black;
+    opacity: 0.9;
+}
+
+
+#resolution-msg{
+    /*display: none;*/
+    visibility: hidden;
+    text-align: center;
+}
+
+#error-msg{
+    position: relative;
+    text-align: center;
+}

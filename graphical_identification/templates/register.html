@@ -1,25 +1,112 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+    <link type="text/css" rel="stylesheet" href="{{ url_for('static', filename='stylesheets/register-stylesheet.css') }}"/>
+    <script src="//code.jquery.com/jquery-1.11.1.min.js"></script>
+
+    <link href="//netdna.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap.min.css" rel="stylesheet" id="bootstrap-css">
+    <script src="//netdna.bootstrapcdn.com/bootstrap/3.2.0/js/bootstrap.min.js"></script>
+
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+
+    <script src="{{ url_for('.static',filename='importImage.js') }}"></script>
+
     <title>Register</title>
 </head>
-<h1>Register Page</h1>
+
+    <h1 style="text-align: center">Register Page</h1>
+
 <body>
-    <h3>Chose an image</h3>
-
-    <div class="image-containter">
-        <div>
-            <img src="{{ images_paths[0] }}">
-            <img src="{{ images_paths[1] }}">
+    {% if msg %}
+        <div class="alert alert-warning page-alert" id="error-msg">
+            <button type="button" class="close"><span aria-hidden="true">×</span></button>
+            {{ msg }}
         </div>
 
-        <div>
-            <img src="{{ images_paths[2] }}">
-            <img src="{{ images_paths[3] }}">
-        </div>
+    {% endif %}
 
-        </di>
+    <h3 style="text-align: center">Chose an image</h3>
+    <div class="alert alert-warning page-alert" id="resolution-msg">
+        <button type="button" class="close"><span aria-hidden="true">×</span></button>
+        <strong>Warning!</strong> Image's resolution might change if is not in the range of 700x700 and 800x800.
+    </div>
 
+    <!-- Default images Grid -->
+    <div>
+        <p id="external-image-container">
+            <img id="external-image" src="#" align="middle"/>
+            <button type="button" class="x-btn" onclick="closeImage(this)">x</button>
+        </p>
+        <table id="images-tb">
+            <tr>
+                <td>
+                    <p class="img-container-p">
+                        <a href="{{ url_for('choose_image', img=images_paths[0]) }}">
+                            <img src="{{ images_paths[0] }}">
+                        </a>
+                    </p>
+                </td>
+
+                <td>
+                    <p class="img-container-p">
+                        <a href="{{ url_for('choose_image', img=images_paths[1]) }}" >
+                            <img src="{{ images_paths[1] }}">
+                        </a>
+                    </p>
+                </td>
+            </tr>
+
+            <tr>
+                <td>
+                    <p class="img-container-p">
+                        <a href="{{ url_for('choose_image', img=images_paths[2]) }}" >
+                            <img src="{{ images_paths[2] }}">
+                        </a>
+                    </p>
+                </td>
+
+
+                <td>
+                    <p class="img-container-p">
+                        <a href="{{ url_for('choose_image', img=images_paths[3]) }}" >
+                            <img class="image" src="{{ images_paths[3] }}">
+                        </a>
+                    </p>
+                </td>
+            </tr>
+        </table>
+    </div>
+
+    <br>
+
+    <div id="form-container">
+        <form method="POST" action="{{url_for('choose_image')}}"
+         enctype = "multipart/form-data">
+            <input type="file" id="import-img" name="import_image" accept=".jpeg,.jpg"
+            onchange="previewImage(this)">
+
+            <input type="hidden" id="img_file-btn">
+        </form>
     </div>
 </body>
+
+
+
+<script>
+    document.getElementById('external-image').addEventListener('load', function() {
+        let w = this.naturalWidth;
+        let h = this.naturalHeight;
+        console.log(this,' h:',h,' w:',w);
+        if(!(w >= 700 && w <=800 && h >= 700 && h <=800)){
+            document.getElementById('resolution-msg').textContent = "Image's resolution might change if is not in the range of 700x700 and 800x800";
+
+            document.getElementById('resolution-msg').style.visibility = 'visible';
+
+        }else{
+
+            document.getElementById('resolution-msg').style.visibility = 'hidden';
+        }
+    });
+
+</script>
 </html>

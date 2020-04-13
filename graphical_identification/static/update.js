@@ -89,12 +89,12 @@ function removeClick(value) {
     //
     let entered_keys_txt = document.getElementById('entered-keys').textContent;
     let index = getIndex(value,'click');
-    console.log('index:',index);
+    // console.log('index:',index);
     entered_keys_txt = replaceChar(entered_keys_txt,'',index[0]);
     document.getElementById('entered-keys').textContent = entered_keys_txt;
 
     click_indexes.splice(index[1]);
-    console.log('click indexes:',click_indexes);
+    // console.log('click indexes:',click_indexes);
 }
 
 function getIndex(value,type){
