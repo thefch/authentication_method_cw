@@ -165,3 +165,8 @@ function initArray() {
     }
     return arr;
 }
+
+function showImportImage(){
+
+    document.getElementById('grid').style.display = 'block';
+}

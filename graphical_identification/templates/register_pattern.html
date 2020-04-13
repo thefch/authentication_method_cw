@@ -7,6 +7,7 @@
     <script src="{{ url_for('.static',filename='displayGrid.js') }}"></script>
     <script src="{{ url_for('.static',filename='grid.js') }}"></script>
     <script src="{{ url_for('.static',filename='update.js') }}"></script>
+    <script src="{{ url_for('.static',filename='importImage.js') }}"></script>
     <title>Register pattern</title>
 </head>
 
@@ -40,7 +41,10 @@
         <img id="point4" src="https://img.icons8.com/color/48/000000/4-circle-c--v1.png"/>
 
         <img src="../static/loading.gif" id="loading-gif">
-        <table class="grid" id="grid-id"></table>
+
+
+        <table class="grid" id="grid-id" ></table>
+
     </div>
 
 <div class="password-container">
@@ -54,6 +58,7 @@
 </body>
 
 <script>
+
     function initValues(elem){
         document.getElementById('grid_keyword').value = document.getElementById('grid-keyword').textContent;
         document.getElementById('keydown_keyword').value = document.getElementById('keydown-keyword').textContent;
@@ -119,9 +124,11 @@
         border: 2px solid blue;
 
         margin:1em auto;
-        /*border-collapse:collapse;*/
-        background-size: 100%;
-        background: url({{ image_path }})
+
+        background-image: url({{image_path}});
+        background-repeat:no-repeat;
+        background-position: center;
+        background-size: 790px 700px;
     }
 
     .grid td {
@@ -145,12 +152,6 @@
         opacity: 0.7;
     }
 
-    /*.point{
-        width: 30px;
-        height: 30px;
-        position: inherit;
-        color: red;
-    }*/
 
     .point{
         background:    #15d798;

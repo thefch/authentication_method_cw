@@ -14,24 +14,31 @@ function readURL(input) {
 }
 
 function setStyle() {
+    console.log('set style');
     document.getElementById('images-tb').style.display = 'none';
     document.getElementById('external-image-container').style.display = 'block';
 
     document.getElementById('img_file-btn').type = 'submit';
-    document.getElementById('import-img').type='hidden';
+    document.getElementById('import-img').style.visibility='hidden';
 }
 
 function previewImage(input){
+
     readURL(input);
     setStyle();
 }
 
 function closeImage(elem){
-    console.log('works');
+    console.log('close imported image.');
+
     document.getElementById('images-tb').style.display = 'block';
     document.getElementById('external-image-container').style.display = 'none';
-    document.getElementById('import-img').value=null;
-    document.getElementById('import-img').type='file';
+
+    document.getElementById('import-img').src ='';
+    document.getElementById('import-img').style.visibility='visible';
+
+    document.getElementById('import-img').value = '';
+
 
     document.getElementById('img_file-btn').type = 'hidden';
     document.getElementById('resolution-msg').style.visibility = 'hidden';

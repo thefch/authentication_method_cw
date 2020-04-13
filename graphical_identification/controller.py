@@ -1,7 +1,6 @@
 import os
 from src.Key import Key
 from PIL import Image as Image
-from resizeimage import resizeimage
 
 
 def get_default_images(DEFAULT_IMAGES_PATH) -> [str]:
@@ -78,41 +77,55 @@ def set_combination(combination: [str], keys: [str], clicks: [int]):
     return final_combination
 
 
+def check_image_size(path: str, name: str) -> bool:
+    checked = False
+    try:
+        # img = Image.open(dir_path+name)
+        with open(path + name, 'r+b') as f:
+            with Image.open(f) as img:
+
+                if img is not None:
+                    img_width, img_height = img.size
+                    print(name, ' -> width:', img_width, ' height:', img_height)
+
+                    out_img = None
+
+                    if not (img_height == 790 and img_width == 770):
+                        # if (img_width > 800 or img_height > 800) or (img_height < 700 or img_height < 700):
+                        print('editing image:', name)
+                        out_img = img.resize([790, 770])
+                        # out_img = resizeimage.resize_cover(img, [790, 770])
+                        img_width, img_height = out_img.size
+                        print(' ---> width:', img_width, ' height:', img_height)
+
+                        out_img.save(path + name, img.format)
+                        checked = True
+                    # elif img_height < 700 or img_height < 700:
+                    #     print('editing image:', name)
+                    #     out_img = resizeimage.resize_cover(img, [790, 770])
+                    #     img_width, img_height = out_img.size
+                    #     print(' ---> width:', img_width, ' height:', img_height)
+                    #
+                    #     out_img.save(path + name, img.format)
+                    #     checked = True
+    except:
+        pass
+
+    return checked
+
+
 def check_default_images(images_paths: [str], dir_path):
     for name in images_paths:
-        img = None
-        try:
-            # img = Image.open(dir_path+name)
-            with open(dir_path + name, 'r+b') as f:
-                with Image.open(f) as img:
-
-                    if img is not None:
-                        img_width, img_height = img.size
-                        print(name, ' -> width:', img_width, ' height:', img_height)
-
-                        out_img = None
-                        if img_width > 800 or img_height > 800:
-                            print('editing image:', name)
-                            out_img = resizeimage.resize_cover(img, [790, 770])
-                            img_width, img_height = out_img.size
-                            print(' ---> width:', img_width, ' height:', img_height)
-
-                            out_img.save(dir_path + name, img.format)
-
-                        elif img_height < 700 or img_height < 700:
-                            print('editing image:', name)
-                            out_img = resizeimage.resize_cover(img, [790, 770])
-                            img_width, img_height = out_img.size
-                            print(' ---> width:', img_width, ' height:', img_height)
-
-                            out_img.save(dir_path + name, img.format)
-        except:
-            print('!!! Error !!!')
-            img = None
+        # img = None
+        checked = check_image_size(dir_path, name)
+        if not checked:
+            print('!!! Error resizing -> ', name)
 
 
 def create_account(username: [str], image_path: [str]):
-
+    #   TODO:
+    #       implement account population
+    #
     pass
 
 

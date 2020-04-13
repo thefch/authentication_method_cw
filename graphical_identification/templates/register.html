@@ -80,11 +80,12 @@
     <br>
 
     <div id="form-container">
-        <form method="POST" action="{{url_for('choose_image')}}"
+        <form method="POST" action="{{url_for('upload')}}"
          enctype = "multipart/form-data">
-            <input type="file" id="import-img" name="import_image" accept=".jpeg,.jpg"
+<!--            <input type="file" id="import-img" name="import_image" accept=".jpeg,.jpg"
             onchange="previewImage(this)">
-
+-->
+            <input type="file" id="import-img" name="import_image" onchange="previewImage(this)" accept=".jpeg,.jpg">
             <input type="hidden" id="img_file-btn">
         </form>
     </div>
