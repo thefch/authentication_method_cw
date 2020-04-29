@@ -85,7 +85,12 @@ class Database:
             cur.execute(query, args)
             acc = cur.fetchone()
             if acc is not None:
-                account = Account(acc[1], acc[2], acc[4], acc[3], acc[0])
+                keyword_info={
+                    'grid_keyword':acc[6],
+                    'keydown_keyword':acc[5],
+                    'entered_keyword':acc[4],
+                    'final_combination':acc[2]}
+                account = Account(acc[1], keyword_info,acc[0])
 
                 print("Account retrieved -> %s" % account.get_username())
         except Error as err:
@@ -115,18 +120,22 @@ class Database:
 
     # add an account entry in the account table
     def add_account(self, account: Account) -> [bool, Account]:
-        username = account.get_username()
-        password = account.get_password()
+        cur = self.connection.cursor()
+        username        = account.get_username()
+        final_keyword   = account.get_keyword_info('final_keyword')
+        entered_keyword = account.get_keyword_info('entered_keyword')
+        keydown_keyword = account.get_keyword_info('keydown_keyword')
+        grid_keyword    = account.get_keyword_info('grid_keyword')
 
-        query = """INSERT INTO accounts_tb ('username','keyword')
-                    VALUES(?,?);"""
+        query = """INSERT INTO accounts_tb ('username','keyword','email','entered_keyword','keydown_keyword','grid_keyword')
+                    VALUES(?,?,?,?,?,?);"""
 
-        args = (username, password)
+        args = (username, username,final_keyword,entered_keyword,keydown_keyword,grid_keyword)
 
         updated_acc = account
         successful = False
         try:
-            self.connection.cursor.execute(query, args)
+            cur.execute(query, args)
             self.connection.commit()
             # print("Account added to db: ", account)
             temp_id = self.get_account_id(account.get_username())
@@ -171,6 +180,7 @@ class Database:
 
     # delete all the entries(users) from the account table
     def delete_all_users(self) -> bool:
+        cur = self.connection.cursor()
         successful = False
         try:
             user_ids = self.get_all_accounts_ids()
@@ -179,7 +189,7 @@ class Database:
                 query = "DELETE from accounts_tb where id=?"
                 args = (i,)
 
-                self.connection.cursor.execute(query, args)
+                cur.execute(query, args)
                 self.connection.commit()
 
                 self.delete_account(i)
@@ -201,8 +211,13 @@ class Database:
             cur.execute(query)
             temp_accounts = cur.fetchall()
             if temp_accounts is not None:
-                for a in temp_accounts:
-                    account = Account(a[1], a[2], a[4], a[3], a[0])
+                for acc in temp_accounts:
+                    keyword_info={
+                        'grid_keyword':acc[6],
+                        'keydown_keyword':acc[5],
+                        'entered_keyword':acc[4],
+                        'final_combination':acc[2]}
+                    account = Account(acc[1], keyword_info,acc[0])
                     accounts.append(account)
 
         except Error as err:

@@ -4,8 +4,8 @@ from flask import Flask, render_template, make_response, request, url_for, redir
 from flask_session import Session
 from werkzeug.utils import secure_filename
 
-from src.Database import Database
-from controller import validate_keyword, set_combination, check_default_images, get_default_images, check_image_size
+from controller import validate_keyword, set_combination, check_default_images, get_default_images, check_image_size, \
+    create_account
 
 app = Flask(__name__)
 
@@ -21,7 +21,7 @@ app.config['SELECTED_IMAGE_PATH'] = None
 
 DEFAULT_IMAGES = get_default_images(DEFAULT_IMAGES_PATH)
 
-database = Database()
+
 
 
 #   TODO
@@ -42,6 +42,7 @@ def check_file_extension(file) -> [bool, str]:
 def validate_register():
     username = ''
     image_path = ''
+    keyword = None
     try:
         username = request.form['username_box']
     except Exception as e:
@@ -52,17 +53,24 @@ def validate_register():
     except Exception as e:
         print(e)
 
+    try:
+        keyword = ''
+    except Exception as e:
+        print(e)
+
     print('username:', username)
     print('image_path:', image_path)
 
     if image_path.strip() is '' or username.strip() is '':
         msg = 'Account creation failed. Make sure to add a username and points on the image!'
-        # rsp = make_response(redirect(url_for('register', msg=msg)))
         rsp = make_response(redirect(url_for('register', msg=msg, images_paths=DEFAULT_IMAGES)))
-
+    elif keyword is None:
+        msg = 'Account creation failed. Something went wrong with the keyword!'
+        rsp = make_response(redirect(url_for('register', msg=msg, images_paths=DEFAULT_IMAGES)))
     else:
-        # create_account(username,image_path)
+        # validation is successful
 
+        create_account(username, keyword, image_path)
         msg = 'Account created successful: {}'.format(username)
         rsp = make_response(redirect(url_for('register', msg=msg, images_paths=DEFAULT_IMAGES)))
 
@@ -167,20 +175,45 @@ def choose_image():
 # rename to validate_login if is used just for login
 @app.route('/validate', methods=['POST'])
 def validate():
+    grid_keyword = ''
+    keydown_keyword = ''
+    entered_keyword = ''
+    username = ''
+    image_path = ''
+    keyword = None
     try:
         grid_keyword = request.form["grid_keyword"]
         keydown_keyword = request.form["keydown_keyword"]
         entered_keyword = request.form["entered_keyword"]
-        print(grid_keyword)
-        is_valid, combination, keys, clicks = validate_keyword(entered_keyword, keydown_keyword, grid_keyword)
-        if is_valid:
-            set_combination(combination, keys, clicks)
-        else:
-            # return back to login page
-            pass
-
+        print('grid kwrd:',grid_keyword)
+        print('keydown kwrd:',keydown_keyword)
+        print('entered kwrd:',entered_keyword)
     except Exception as e:
-        raise e
+        print(e)
+
+    try:
+        username = request.form['username_box']
+    except Exception as e:
+        print(e)
+
+    try:
+        image_path = request.form['image_path']
+    except Exception as e:
+        print(e)
+
+    is_valid, combination, keys, clicks = validate_keyword(entered_keyword, keydown_keyword, grid_keyword)
+    if is_valid and username.strip() != '' and image_path.strip() != '':
+        final_combination = set_combination(combination, keys, clicks)
+        keyword_info={
+            'grid_keyword':grid_keyword,
+            'keydown_keyword':keydown_keyword,
+            'entered_keyword':entered_keyword,
+            'final_combination':final_combination}
+        create_account(username,keyword_info,image_path)
+    else:
+        # throw an error massage
+        pass
+
 
     img_path = "static/images/kitten.jpg"
     path = os.path.abspath(img_path)

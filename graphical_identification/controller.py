@@ -1,9 +1,11 @@
 import os
 
 from src.Account import Account
+from src.Database import Database
 from src.Key import Key
 from PIL import Image as Image
 
+database = Database()
 
 def get_default_images(DEFAULT_IMAGES_PATH) -> [str]:
     images = os.listdir(DEFAULT_IMAGES_PATH)
@@ -124,8 +126,14 @@ def check_default_images(images_paths: [str], dir_path):
             print('!!! Error resizing -> ', name)
 
 
-def create_account(username: str, keyword: str, image_path: str):
-    acc = Account(username, keyword, )
+def create_account(username: str, keyword_info: [str], image_path: str):
+    acc = Account(username, keyword_info)
+    acc = database.add_account(acc)
+
+    ## TODO
+    database.add_image_entry(image_path,acc,acc.get_username())
+
+
     #   TODO:
     #       implement account population
     # get image first and save it
