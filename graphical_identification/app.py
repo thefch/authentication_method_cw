@@ -74,12 +74,12 @@ def register_pattern():
     img_path = app.config['SELECTED_IMAGE_PATH']
     app.config['SELECTED_IMAGE_PATH'] = None
 
-    # if img_path is not None:
-    rsp = make_response(render_template('register_pattern.html', image_path=img_path))
-    # else:
-    #     msg = 'No image found, please select one!'
-    #     print(msg)
-    #     rsp = make_response(redirect(url_for('index', msg=msg)))
+    if img_path is not None:
+        rsp = make_response(render_template('register_pattern.html', image_path=img_path))
+    else:
+         msg = 'No image found, please select one!'
+         print(msg)
+         rsp = make_response(redirect(url_for('index', msg=msg)))
 
     return rsp
 
@@ -194,6 +194,7 @@ def register():
     try:
         msg = request.args['msg']
         print('Message found from register request:', msg)
+
         rsp = make_response(render_template('register.html', images_paths=DEFAULT_IMAGES, msg=msg))
 
     except Exception as e:

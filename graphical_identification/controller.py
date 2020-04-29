@@ -1,4 +1,6 @@
 import os
+
+from src.Account import Account
 from src.Key import Key
 from PIL import Image as Image
 
@@ -122,9 +124,12 @@ def check_default_images(images_paths: [str], dir_path):
             print('!!! Error resizing -> ', name)
 
 
-def create_account(username: [str], image_path: [str]):
+def create_account(username: str, keyword: str, image_path: str):
+    acc = Account(username, keyword, )
     #   TODO:
     #       implement account population
+    # get image first and save it
+
     #
     pass
 
