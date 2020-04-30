@@ -9,15 +9,15 @@ PATH = 'database/db.sqlite3'
 
 
 class Database:
-
     def __init__(self):
-        self.connection = self.connect()
+        # self.connection = self.connect()
+        pass
 
-    def __delete__(self):
-        cur = self.connection.cursor()
-        cur.close()
-        self.connection.close()
-        print("Database disconnected!")
+    # def __delete__(self):
+    #     cur = self.connection.cursor()
+    #     cur.close()
+    #     self.connection.close()
+    #     print("Database disconnected!")
 
     @staticmethod
     def connect():
@@ -35,7 +35,9 @@ class Database:
 
     # checks if an account already exists in the database
     def account_exists(self, username: str) -> bool:
-        cur = self.connection.cursor()
+        con = self.connect()
+        cur = con.cursor()
+
         query = "SELECT * FROM accounts_tb WHERE username=?"
         args = (username,)
 
@@ -49,10 +51,14 @@ class Database:
         except Error as err:
             raise err
 
+        cur.close()
+        con.close()
         return exists
 
     def account_exists_by_id(self, user_id: int) -> bool:
-        cur = self.connection.cursor()
+        con = self.connect()
+        cur = con.cursor()
+
         query = "SELECT * FROM accounts_tb WHERE id=?"
         args = (user_id,)
 
@@ -66,12 +72,14 @@ class Database:
         except Error as err:
             raise err
 
+        cur.close()
+        con.close()
         return exists
 
     # returns an Account object
     def get_account(self, username: str, user_id=-1) -> Account:
-
-        cur = self.connection.cursor()
+        con = self.connect()
+        cur = con.cursor()
 
         if user_id != -1:
             query = """SELECT * FROM accounts_tb WHERE id=?"""
@@ -89,19 +97,21 @@ class Database:
                     'grid_keyword':acc[6],
                     'keydown_keyword':acc[5],
                     'entered_keyword':acc[4],
-                    'final_combination':acc[2]}
+                    'final_keyword':acc[2]}
                 account = Account(acc[1], keyword_info,acc[0])
 
                 print("Account retrieved -> %s" % account.get_username())
         except Error as err:
             raise err
 
+        cur.close()
+        con.close()
         return account
 
     # returns an Accounts id
     def get_account_id(self, username: str) -> int:
-
-        cur = self.connection.cursor()
+        con = self.connect()
+        cur = con.cursor()
 
         query = "SELECT * FROM accounts_tb WHERE username=?"
         args = (username,)
@@ -116,11 +126,16 @@ class Database:
                 # print(user_id)
         except Error as err:
             raise err
+
+        cur.close()
+        con.close()
         return user_id
 
     # add an account entry in the account table
     def add_account(self, account: Account) -> [bool, Account]:
-        cur = self.connection.cursor()
+        con = self.connect()
+        cur = con.cursor()
+
         username        = account.get_username()
         final_keyword   = account.get_keyword_info('final_keyword')
         entered_keyword = account.get_keyword_info('entered_keyword')
@@ -136,7 +151,7 @@ class Database:
         successful = False
         try:
             cur.execute(query, args)
-            self.connection.commit()
+            con.commit()
             # print("Account added to db: ", account)
             temp_id = self.get_account_id(account.get_username())
 
@@ -145,6 +160,8 @@ class Database:
         except Exception as err:
             print(err)
 
+        cur.close()
+        con.close()
         return successful, updated_acc
 
     # delete an account by it's ID
@@ -176,11 +193,15 @@ class Database:
         except Error as err:
             print(err)
 
+        cursor.close()
+        conn.close()
         return successful
 
     # delete all the entries(users) from the account table
     def delete_all_users(self) -> bool:
-        cur = self.connection.cursor()
+        con = self.connect()
+        cur = con.cursor()
+
         successful = False
         try:
             user_ids = self.get_all_accounts_ids()
@@ -190,7 +211,7 @@ class Database:
                 args = (i,)
 
                 cur.execute(query, args)
-                self.connection.commit()
+                con.commit()
 
                 self.delete_account(i)
 
@@ -200,11 +221,15 @@ class Database:
         except Error as err:
             print(err)
 
+        cur.close()
+        con.close()
         return successful
 
     # return all accounts in the database
     def get_all_accounts(self) -> [Account]:
-        cur = self.connection.cursor()
+        con = self.connect()
+        cur = con.cursor()
+
         query = "SELECT * FROM accounts_tb"
         accounts = []
         try:
@@ -216,17 +241,21 @@ class Database:
                         'grid_keyword':acc[6],
                         'keydown_keyword':acc[5],
                         'entered_keyword':acc[4],
-                        'final_combination':acc[2]}
+                        'final_keyword':acc[2]}
                     account = Account(acc[1], keyword_info,acc[0])
                     accounts.append(account)
 
         except Error as err:
             print(err)
 
+        cur.close()
+        con.close()
         return accounts
 
     def get_all_accounts_ids(self) -> [Account]:
-        cur = self.connection.cursor()
+        con = self.connect()
+        cur = con.cursor()
+
         query = "SELECT * FROM accounts_tb"
         ids = []
         try:
@@ -239,9 +268,14 @@ class Database:
         except Error as err:
             print(err)
 
+        cur.close()
+        con.close()
         return ids
 
-    def add_image_entry(self, image_, acc: Account, name_: str = None):
+    def add_image_entry(self, image_, acc, name_= None):
+        con = self.connect()
+        cur = con.cursor()
+
         type(image_)
         query = """INSERT INTO images_tb ('image','name','account_id')
                         VALUES(?,?,?);"""
@@ -254,18 +288,23 @@ class Database:
         args = (image_, name, acc.get_id())
         successful = False
         try:
-            cursor = self.connection.cursor()
-            cursor.execute(query, args)
+            # cursor = self.connection.cursor()
+            cur.execute(query, args)
 
-            self.connection.commit()
+            con.commit()
 
             successful = True
         except Exception as err:
             print(err)
 
+        cur.close()
+        con.close()
         return successful
 
     def get_image_entry(self, acc: Account, name_: str = None):
+        con = self.connect()
+        cur = con.cursor()
+
         query = """SELECT * from images_tb where name = ? and account_id=?"""
 
         if name_ is not None:
@@ -275,9 +314,9 @@ class Database:
 
         args = (name, name, acc.get_id())
         try:
-            cursor = self.connection.cursor()
-            cursor.execute(query, args)
-            entry = cursor.fetchone()
+
+            cur.execute(query, args)
+            entry = cur.fetchone()
             print(entry[1])
             photo_path = os.path.abspath("../../static/images/") + '\\' + str(name) + ".jpg"
             # photoPath = "images/" + str(name) + ".jpg"
@@ -285,6 +324,9 @@ class Database:
             print("Image stored on disk :", photo_path)
         except Exception as error:
             print(error)
+
+        cur.close()
+        con.close()
 
     @staticmethod
     def __convert_to_binary_data(filename):

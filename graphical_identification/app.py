@@ -22,8 +22,6 @@ app.config['SELECTED_IMAGE_PATH'] = None
 DEFAULT_IMAGES = get_default_images(DEFAULT_IMAGES_PATH)
 
 
-
-
 #   TODO
 #       * check validation for / and range of values
 #       * rearrange submit button in register page
@@ -36,7 +34,6 @@ def check_file_extension(file) -> [bool, str]:
     if ext in ALLOWED_EXTENSIONS:
         valid = True
     return valid, ext
-
 
 @app.route('/validate_register', methods=['POST'])
 def validate_register():
@@ -76,7 +73,6 @@ def validate_register():
 
     return rsp
 
-
 @app.route('/register_pattern')
 def register_pattern():
     img_path = app.config['SELECTED_IMAGE_PATH']
@@ -90,7 +86,6 @@ def register_pattern():
          rsp = make_response(redirect(url_for('index', msg=msg)))
 
     return rsp
-
 
 # used when uploading an image
 # checks for EXTENSIONS and verifies the image
@@ -145,7 +140,6 @@ def upload():
             resp = redirect(url_for('register', msg=msg))
     return resp
 
-
 # only when registering
 # it should be used only when no account is in session
 # and when the user selects one of the default images
@@ -170,7 +164,6 @@ def choose_image():
     #  else: exit page
 
     return rsp
-
 
 # rename to validate_login if is used just for login
 @app.route('/validate', methods=['POST'])
@@ -203,24 +196,24 @@ def validate():
 
     is_valid, combination, keys, clicks = validate_keyword(entered_keyword, keydown_keyword, grid_keyword)
     if is_valid and username.strip() != '' and image_path.strip() != '':
-        final_combination = set_combination(combination, keys, clicks)
+        final_keyword = set_combination(combination, keys, clicks)
         keyword_info={
             'grid_keyword':grid_keyword,
             'keydown_keyword':keydown_keyword,
             'entered_keyword':entered_keyword,
-            'final_combination':final_combination}
+            'final_keyword':final_keyword}
         create_account(username,keyword_info,image_path)
+        rsp = make_response(render_template("login.html", img_path=image_path))
     else:
-        # throw an error massage
-        pass
+        # if username.strip() == '' or image_path.strip() == '':
+        msg = 'Account creation failed. Make sure to add a username and points(max 4) on the image!'
+        # rsp = make_response(render_template('register.html', images_paths=DEFAULT_IMAGES, msg=msg))
+        rsp = make_response(redirect(url_for('register', msg=msg, images_paths=DEFAULT_IMAGES)))
 
-
-    img_path = "static/images/kitten.jpg"
-    path = os.path.abspath(img_path)
-    rsp = make_response(render_template("login.html", img_path=img_path))
+    # img_path = "static/images/kitten.jpg"
+    # path = os.path.abspath(img_path)
 
     return rsp
-
 
 @app.route('/register', methods=['POST', 'GET'])
 def register():
@@ -236,7 +229,6 @@ def register():
 
     return rsp
 
-
 @app.route('/login', methods=['POST', 'GET'])
 def login():
     # 789 x 770
@@ -246,14 +238,12 @@ def login():
     rsp = make_response(render_template("login.html", img_path=img_path))
     return rsp
 
-
 @app.route('/')
 def index():
     check_default_images(DEFAULT_IMAGES, DEFAULT_IMAGES_PATH)
 
     rsp = make_response(render_template("index.html"))
     return rsp
-
 
 if __name__ == '__main__':
     app.run(debug=True)

@@ -14,14 +14,15 @@
 <body>
 <div style="text-align: center">
     <h1>Register your pattern</h1>
-    <h2><strong>Click on the image to add points (maximum 4 points)</strong></h2>
+    <h2><strong>Click on the image to add points (total 4 points)</strong></h2>
     <h2>You can also add keyword while doing that to increase security</h2>
 </div>
 
 <!-- <form method="POST" action="/validate_register" id="form">  -->
 <form method="POST" action="/validate" id="form">
     <div style="text-align: center">
-        Username:
+        <label>Username:</label>
+        <label for="username_box"></label>
         <input type="text" id="username_box" name="username_box">
         <input type="hidden" id="image_path" name="image_path" value="{{ image_path }}">
 

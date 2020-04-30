@@ -5,6 +5,7 @@ from src.Database import Database
 from src.Key import Key
 from PIL import Image as Image
 
+MAX_POINTS = 4
 database = Database()
 
 def get_default_images(DEFAULT_IMAGES_PATH) -> [str]:
@@ -30,30 +31,36 @@ def filter_data(combination: [str], keys: [str], clicks: [str]):
 
 
 def validate_keyword(entered_keyword: str, keydown_keyword: str, grid_keyword: str) -> [bool, str, str, str]:
+    # the index of the text value from the grid page
     start_full = entered_keyword.find(':') + 1
     start_keys = keydown_keyword.find(':') + 1
     start_clicks = grid_keyword.find(':') + 1
 
-    successful = False
+    is_valid = False
     keys = []
     combination = []
     clicks = []
 
+
     if start_clicks is -1 or start_keys is -1 or start_full is -1:
         # ERROR
-        successful = False
+        is_valid = False
     else:
         keys = keydown_keyword[start_keys:]
         combination = entered_keyword[start_full:]
         clicks = grid_keyword[start_clicks:]
-
+        print('grid kwrd:',len(clicks),'  entered:',len(combination))
         combination, keys, clicks = filter_data(combination, keys, clicks)
-        print('keys:', keys)
-        print('clicks', clicks)
-        print('combination:', combination)
-        successful = True
 
-    return successful, combination, keys, clicks
+        if len(combination) == 0 or len(clicks) == 0 or len(clicks) < MAX_POINTS:
+            is_valid = False
+        else:
+            print('keys:', keys)
+            print('clicks', clicks)
+            print('combination:', combination)
+            is_valid = True
+
+    return is_valid, combination, keys, clicks
 
 
 def set_combination(combination: [str], keys: [str], clicks: [int]):
@@ -128,7 +135,7 @@ def check_default_images(images_paths: [str], dir_path):
 
 def create_account(username: str, keyword_info: [str], image_path: str):
     acc = Account(username, keyword_info)
-    acc = database.add_account(acc)
+    _,acc = database.add_account(acc)
 
     ## TODO
     database.add_image_entry(image_path,acc,acc.get_username())

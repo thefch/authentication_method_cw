@@ -8,7 +8,7 @@ class Account:
     def __init__(self, username_: str, keyword_info_: [str], id_: int = None):
     # def __init__(self, username_: str, keyword_info_: [str], image_id_: int, email_: str = None, id_: int = None):
         self.__username = username_
-        self.__final_combination = keyword_info_['final_combination']
+        self.__final_keyword = keyword_info_['final_keyword']
         self.__entered_keyword   = keyword_info_['entered_keyword']
         self.__keydown_keyword   = keyword_info_['keydown_keyword']
         self.__grid_keydown = keyword_info_['grid_keyword']
@@ -48,7 +48,7 @@ class Account:
 
     def __str__(self):
         return "%s username:%s pass:%s img_id:%s" % (
-            self.__id, self.__username, self.__final_combination, self.__image_id)
+            self.__id, self.__username, self.__final_keyword, self.__image_id)
 
 
 if __name__ == '__main__':
