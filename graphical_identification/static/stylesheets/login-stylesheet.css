@@ -1,0 +1,16 @@
+
+#username_box{
+    text-align: center;
+}
+
+#error-msg{
+    position: center;
+    text-align: center;
+    float: top;
+}
+
+#enter-usr-box{
+    margin-top: 10%;
+    text-align: center;
+
+}

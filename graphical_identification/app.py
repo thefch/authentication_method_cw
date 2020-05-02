@@ -5,7 +5,7 @@ from flask_session import Session
 from werkzeug.utils import secure_filename
 
 from controller import validate_keyword, set_combination, check_default_images, get_default_images, check_image_size, \
-    create_account
+    create_account, get_account
 
 app = Flask(__name__)
 
@@ -34,6 +34,35 @@ def check_file_extension(file) -> [bool, str]:
     if ext in ALLOWED_EXTENSIONS:
         valid = True
     return valid, ext
+
+# TODO
+@app.route('/login_pattern')
+def login_pattern():
+    rsp = make_response(render_template('login_pattern.html'))
+
+    return rsp
+
+
+@app.route('/find_user', methods=['POST'])
+def find_user():
+    username = ''
+    try:
+        username = request.form['username_box']
+    except Exception as e:
+        print(e)
+
+    if username.strip() is '' or username is None:
+        msg = "Invalid username!"
+        print(msg)
+        # rsp = make_response(render_template('login.html', msg=msg))
+        rsp = make_response(redirect(url_for('login', msg=msg)))
+    else:
+        acc = get_account(username)
+        msg = ''
+        rsp = make_response(redirect(url_for('login_pattern', msg=msg, images_paths=DEFAULT_IMAGES)))
+
+    return rsp
+
 
 @app.route('/validate_register', methods=['POST'])
 def validate_register():
@@ -73,6 +102,7 @@ def validate_register():
 
     return rsp
 
+
 @app.route('/register_pattern')
 def register_pattern():
     img_path = app.config['SELECTED_IMAGE_PATH']
@@ -81,11 +111,12 @@ def register_pattern():
     if img_path is not None:
         rsp = make_response(render_template('register_pattern.html', image_path=img_path))
     else:
-         msg = 'No image found, please select one!'
-         print(msg)
-         rsp = make_response(redirect(url_for('index', msg=msg)))
+        msg = 'No image found, please select one!'
+        print(msg)
+        rsp = make_response(redirect(url_for('index', msg=msg)))
 
     return rsp
+
 
 # used when uploading an image
 # checks for EXTENSIONS and verifies the image
@@ -140,6 +171,7 @@ def upload():
             resp = redirect(url_for('register', msg=msg))
     return resp
 
+
 # only when registering
 # it should be used only when no account is in session
 # and when the user selects one of the default images
@@ -165,6 +197,7 @@ def choose_image():
 
     return rsp
 
+
 # rename to validate_login if is used just for login
 @app.route('/validate', methods=['POST'])
 def validate():
@@ -178,9 +211,9 @@ def validate():
         grid_keyword = request.form["grid_keyword"]
         keydown_keyword = request.form["keydown_keyword"]
         entered_keyword = request.form["entered_keyword"]
-        print('grid kwrd:',grid_keyword)
-        print('keydown kwrd:',keydown_keyword)
-        print('entered kwrd:',entered_keyword)
+        print('grid kwrd:', grid_keyword)
+        print('keydown kwrd:', keydown_keyword)
+        print('entered kwrd:', entered_keyword)
     except Exception as e:
         print(e)
 
@@ -197,23 +230,22 @@ def validate():
     is_valid, combination, keys, clicks = validate_keyword(entered_keyword, keydown_keyword, grid_keyword)
     if is_valid and username.strip() != '' and image_path.strip() != '':
         final_keyword = set_combination(combination, keys, clicks)
-        keyword_info={
-            'grid_keyword':grid_keyword,
-            'keydown_keyword':keydown_keyword,
-            'entered_keyword':entered_keyword,
-            'final_keyword':final_keyword}
-        create_account(username,keyword_info,image_path)
+        keyword_info = {
+            'grid_keyword': grid_keyword,
+            'keydown_keyword': keydown_keyword,
+            'entered_keyword': entered_keyword,
+            'final_keyword': final_keyword}
+        create_account(username, keyword_info, image_path)
         rsp = make_response(render_template("login.html", img_path=image_path))
     else:
-        # if username.strip() == '' or image_path.strip() == '':
         msg = 'Account creation failed. Make sure to add a username and points(max 4) on the image!'
-        # rsp = make_response(render_template('register.html', images_paths=DEFAULT_IMAGES, msg=msg))
         rsp = make_response(redirect(url_for('register', msg=msg, images_paths=DEFAULT_IMAGES)))
 
     # img_path = "static/images/kitten.jpg"
     # path = os.path.abspath(img_path)
 
     return rsp
+
 
 @app.route('/register', methods=['POST', 'GET'])
 def register():
@@ -229,14 +261,22 @@ def register():
 
     return rsp
 
+
 @app.route('/login', methods=['POST', 'GET'])
 def login():
     # 789 x 770
-    img_path = "static/images/default/bar.jpg"
-    path = os.path.abspath(img_path)
-    print(path)
-    rsp = make_response(render_template("login.html", img_path=img_path))
+    # img_path = "static/images/default/bar.jpg"
+    # path = os.path.abspath(img_path)
+    # print(path)
+    try:
+        msg = request.args['msg']
+        print('Message found from register request:', msg)
+
+        rsp = make_response(render_template('login.html', msg=msg))
+    except Exception as e:
+        rsp = make_response(render_template("login.html"))
     return rsp
+
 
 @app.route('/')
 def index():
@@ -244,6 +284,7 @@ def index():
 
     rsp = make_response(render_template("index.html"))
     return rsp
+
 
 if __name__ == '__main__':
     app.run(debug=True)

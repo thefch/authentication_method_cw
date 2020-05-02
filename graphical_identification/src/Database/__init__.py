@@ -11,30 +11,17 @@ from src.Key import Key
 
 PATH = 'database/db.sqlite3'
 
-# protocol = 0
-# sqlite3.register_converter("pickle", pickle.loads)
-#
-# sqlite3.register_adapter(list, pickle.dumps)
-# sqlite3.register_adapter(set, pickle.dumps)
-
 
 class Database:
     def __init__(self):
-        # self.connection = self.connect()
         pass
-
-    # def __delete__(self):
-    #     cur = self.connection.cursor()
-    #     cur.close()
-    #     self.connection.close()
-    #     print("Database disconnected!")
 
     @staticmethod
     def connect():
         conn = None
         try:
             if os.path.exists(PATH):
-                conn = sqlite3.connect(PATH,detect_types=sqlite3.PARSE_DECLTYPES)
+                conn = sqlite3.connect(PATH, detect_types=sqlite3.PARSE_DECLTYPES)
                 # print('Connected to db:', PATH, '  Successfully!')
             else:
                 print("Could not connect to Database: NOT FOUND!")
@@ -110,8 +97,10 @@ class Database:
                     'entered_keyword': acc[4],
                     'final_keyword': dic}
                 account = Account(acc[1], keyword_info, acc[0])
-
                 print("Account retrieved -> %s" % account.get_username())
+
+                img = self.get_image_entry(account)
+                account.set_image(img)
         except Error as err:
             raise err
 
@@ -148,14 +137,7 @@ class Database:
         cur = con.cursor()
 
         username = account.get_username()
-
-        final_keyword = account.get_keyword_info('final_keyword')
-        # final_keyword = json.dumps(final_kwrd, cls=EnumEncoder).encode('utf-8')
-
         final_keyword = json.dumps(account.get_formatted_combination())
-        print("The type after conversion to bytes is : " + str(type(final_keyword)))
-        print("The value after conversion to bytes is : " + str(final_keyword))
-
         entered_keyword = account.get_keyword_info('entered_keyword')
         keydown_keyword = account.get_keyword_info('keydown_keyword')
         grid_keyword = account.get_keyword_info('grid_keyword')
@@ -183,7 +165,7 @@ class Database:
         con.close()
         return successful, updated_acc
 
-    def set_account_img_id(self, acc, img_id) -> bool:
+    def set_account_img_id(self, account, img_id) -> bool:
         con = self.connect()
         cur = con.cursor()
         successful = False
@@ -191,14 +173,14 @@ class Database:
         query = """UPDATE accounts_tb
                       SET image_id=? 
                       WHERE id=?"""
-        args = (img_id, acc.get_id())
+        args = (img_id, account.get_id())
 
         try:
             cur = con.cursor()
             cur.execute(query, args)
             con.commit()
             successful = True
-            print(' Image id updated for user:', acc.get_username())
+            print(' Image id updated for user:', account.get_username(), '  successful:', successful)
         except Exception as e:
             raise e
         cur.close()
@@ -373,32 +355,39 @@ class Database:
         con.close()
         return im_id
 
-    def get_image_entry(self, acc: Account, name_: str = None):
-        con = self.connect()
-        cur = con.cursor()
+    def get_image_entry(self, acc: Account, name_: str = None) -> Image:
 
-        query = """SELECT * from images_tb where name = ? and account_id=?"""
-
+        name = ''
         if name_ is not None:
             name = name_
         else:
             name = acc.get_username()
 
-        args = (name, name, acc.get_id())
-        try:
+        query = """SELECT * from images_tb where name = ? and account_id=?"""
+        args = (name, acc.get_id())
 
+        con = self.connect()
+        cur = con.cursor()
+
+        img = None
+        try:
             cur.execute(query, args)
             entry = cur.fetchone()
-            print(entry[1])
-            photo_path = os.path.abspath("../../static/images/") + '\\' + str(name) + ".jpg"
-            # photoPath = "images/" + str(name) + ".jpg"
-            self.__write_to_file(entry[1], photo_path)
-            print("Image stored on disk :", photo_path)
+            if entry is not None:
+                print(entry[1])
+                photo_path = os.path.abspath("static/images/users/") + '\\' + str(name) + ".jpg"
+                # photoPath = "images/" + str(name) + ".jpg"
+                self.__write_to_file(entry[1], photo_path)
+                print("Image stored on disk :", photo_path)
+
+                img = Image(photo_path, name, entry[0], acc.get_id())
         except Exception as error:
-            print(error)
+            raise error
 
         cur.close()
         con.close()
+
+        return img
 
     @staticmethod
     def __convert_to_binary_data(filename):
@@ -406,21 +395,6 @@ class Database:
         with open(filename, 'rb') as file:
             blobData = file.read()
         return blobData
-
-    @staticmethod
-    def __convert_from_pickle(file):
-        # Convert form pickle obj to python
-        # res_dict = json.loads(file.decode('utf-8'))
-        #
-        # # printing type and dict
-        # print("The type after conversion to dict is : " + str(type(res_dict)))
-        # print("The value after conversion to dict is : " + str(res_dict))
-        # D2 = eval(file)
-        print('type:',type(file))
-        print(file)
-        x = pickle.loads(file.decode('base64', 'strict'))
-        print(x)
-        return 1
 
     @staticmethod
     def __get_enum_combination_format(input_file):
@@ -442,12 +416,20 @@ class Database:
         return out
 
     @staticmethod
-    def __write_to_file(data, filename):
+    def __write_to_file(data, filepath):
         # Convert binary data to proper format and write it on Hard Disk
-        with open(filename, 'wb') as file:
-            file.write(data)
-        print("Stored blob data into: ", filename, "\n")
 
+        print(type(data))
+        print(type(filepath))
+        try:
+
+            with open(filepath, 'wb') as file:
+                file.write(data)
+            print("Stored blob data into: ", filepath, "\n")
+            return True
+        except Exception as e:
+            raise e
+            return False
 
 if __name__ == '__main__':
     testing = True

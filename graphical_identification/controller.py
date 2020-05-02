@@ -148,6 +148,12 @@ def create_account(username: str, keyword_info: [str], image_path: str) -> bool:
     return False
 
 
+def get_account(username):
+    acc = database.get_account(username)
+    print(acc)
+    print(acc.get_image())
+    return acc
+
 if __name__ == '__main__':
     default_images_path = 'static/images/default/'
     DEFAULT_IMAGES = os.listdir(default_images_path)

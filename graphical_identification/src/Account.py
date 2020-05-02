@@ -17,7 +17,7 @@ class Account:
         self.__grid_keydown = keyword_info_['grid_keyword']
         self.__keyword_info = keyword_info_
         self.__email = ''
-        self.__image_id = None
+        self.__image = None
         self.__id = id_ if id_ is not None else -1
 
     def get_username(self):
@@ -29,17 +29,11 @@ class Account:
         else:
             return self.__keyword_info[name]
 
-    # def get_email(self):
-    #     return self.__email
-
-    def get_image_id(self):
-        return self.__image_id
-
     def get_id(self):
         return self.__id
 
-    def set_id(self, id_: int):
-        self.__id = id_
+    def get_image(self) -> Image:
+        return self.__image
 
     def get_formatted_combination(self):
         out = []
@@ -53,11 +47,19 @@ class Account:
             out.append(pair)
         return out
 
+    def set_id(self, id_: int):
+        self.__id = id_
 
+    def set_image(self, img: Image):
+        self.__image = img
 
     def __str__(self):
-        return "%s username:%s pass:%s img_id:%s" % (
-            self.__id, self.__username, self.__final_keyword, self.__image_id)
+        if self.__image is not None:
+            return "%s username:%s pass:%s img_id:%s" % (
+                self.__id, self.__username, self.__final_keyword, self.__image.get_id())
+        else:
+            return "%s username:%s pass:%s" % (
+                self.__id, self.__username, self.__final_keyword)
 
     def get_email(self):
         return self.__email

@@ -2,189 +2,34 @@
 <html>
 <head>
     <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
+    <link type="text/css" rel="stylesheet" href="{{ url_for('static', filename='stylesheets/login-stylesheet.css') }}"/>
+    <link href="//netdna.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap.min.css" rel="stylesheet" id="bootstrap-css">
     <script src="{{ url_for('.static',filename='displayGrid.js') }}"></script>
     <script src="{{ url_for('.static',filename='grid.js') }}"></script>
     <script src="{{ url_for('.static',filename='update.js') }}"></script>
     <title>Login</title>
 </head>
 
-<h1>Login Page</h1>
-
+<h1 style="text-align: center">Login Page</h1>
 <body>
-    <div>
-        <i class="material-icons" id="gridOffID" >grid_off</i>
-        <i class="material-icons" id="gridOnID" >grid_on</i>
-    </div>
+    {% if msg %}
+        <div class="alert alert-warning page-alert" id="error-msg">
+            <button type="button" class="close"><span aria-hidden="true">×</span></button>
+            {{ msg }}
+        </div>
 
-    <div>
-        <!-- Rectangular switch -->
-        <label class="switch">
-            <input type="checkbox" onchange="displayGrid(this)">
-            <span class="slider"></span>
-        </label>
-    </div>
+    {% endif %}
 
-    <div class="password-container">
-        <h3 id="grid-keyword">Grid-keyword:</h3>
-        <h3 id="keydown-keyword">Keydown-keyword:</h3>
-        <h3 id="entered-keys">Entered:</h3>
-    </div>
-
-    <div id="grid-container" style="display: table">
-        <img src="../static/loading.gif" id="loading-gif">
-        <table class="grid" id="grid-id"></table>
-    </div>
-
-
-    <form method="POST" action="/validate">
-        <input type="hidden" id="grid_keyword" name="grid_keyword">
-        <input type="hidden" id="keydown_keyword" name="keydown_keyword">
-        <input type="hidden" id="entered_keyword" name="entered_keyword">
-
-        <input type="submit" id="login-btn" value="Login" onclick=initValues(this)>
-
+    <form method="POST" action="/find_user">
+        <div  id="enter-usr-box">
+            <label>Username:</label>
+            <label for="username_box"></label>
+            <input type="text" id="username_box" name="username_box">
+            <input type="submit" id="submit-btn" value="Enter">
+        </div>
     </form>
+
+
 </body>
-
-<script>
-    function initValues(elem){
-        document.getElementById('grid_keyword').value = document.getElementById('grid-keyword').textContent;
-        document.getElementById('keydown_keyword').value = document.getElementById('keydown-keyword').textContent;
-        document.getElementById('entered_keyword').value = document.getElementById('entered-keys').textContent;
-    }
-
-</script>
-
-<script>
-    document.addEventListener('keydown', function(event) {
-        update_keyword('key-elem','keydown',event.key);
-
-    }, true);
-</script>
-
-
-
-
-
-
-<style>
-    #gridOffID{
-        visibility: visible;
-    }
-
-    #gridOnID{
-        visibility: hidden;
-        margin-left: 10px;
-    }
-
-    #grid-container{
-        border: 2px solid black;
-        position: relative;
-        margin-left:auto;
-        margin-right:auto;
-    }
-
-    #login-btn{
-        text-align:center;
-    }
-
-    /* The switch - the box around the slider */
-    .switch {
-        position: relative;
-        display: inline-block;
-        width: 60px;
-        height: 34px;
-    }
-
-    /* Hide default HTML checkbox */
-    .switch input {
-        opacity: 0;
-        width: 0;
-        height: 0;
-    }
-
-    /* The slider */
-    .slider {
-        position: absolute;
-        cursor: pointer;
-        top: 0;
-        left: 0;
-        right: 0;
-        bottom: 0;
-        background-color: #ccc;
-        -webkit-transition: .4s;
-        transition: .4s;
-    }
-
-    .slider:before {
-        position: absolute;
-        content: "";
-        height: 26px;
-        width: 26px;
-        left: 4px;
-        bottom: 4px;
-        background-color: white;
-        -webkit-transition: .4s;
-        transition: .4s;
-    }
-
-    input:checked + .slider {
-        background-color: #2196F3;
-    }
-
-    input:focus + .slider {
-        box-shadow: 0 0 1px #2196F3;
-    }
-
-    input:checked + .slider:before {
-        -webkit-transform: translateX(26px);
-        -ms-transform: translateX(26px);
-        transform: translateX(26px);
-    }
-
-    /* Rounded sliders */
-    .slider.round {
-        border-radius: 34px;
-    }
-
-    .slider.round:before {
-        border-radius: 50%;
-    }
-
-
-    /*<!-- style for GRID -->*/
-    .grid {
-        margin:1em auto;
-        border-collapse:collapse;
-        background-image: url({{ img_path }});
-        background-size: 100%;
-        background-repeat: no-repeat;
-    }
-
-    .grid td {
-        cursor:pointer;
-        width:15px;
-        height:15px;
-        border:1px solid #ccc;
-        text-align:center;
-        font-family:sans-serif; font-size:13px;
-        min-width: 15px;
-    }
-
-    .dot {
-        height: 15px;
-        width: 15px;
-
-        background-color: red;
-        border-radius: 30%;
-        text-align: center;
-        display: none;
-        /*opacity: 0.2;
-
-
-         */
-    }
-</style>
-
 
 </html>
