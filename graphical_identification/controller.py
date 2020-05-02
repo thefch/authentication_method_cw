@@ -8,6 +8,7 @@ from PIL import Image as Image
 MAX_POINTS = 4
 database = Database()
 
+
 def get_default_images(DEFAULT_IMAGES_PATH) -> [str]:
     images = os.listdir(DEFAULT_IMAGES_PATH)
     return [DEFAULT_IMAGES_PATH + x for x in images]
@@ -26,7 +27,6 @@ def filter_data(combination: [str], keys: [str], clicks: [str]):
 
     clicks = clicks.split('/')
     new_clicks = [int(c) for c in clicks if c.strip() is not '']
-
     return new_combination, new_keys, new_clicks
 
 
@@ -41,7 +41,6 @@ def validate_keyword(entered_keyword: str, keydown_keyword: str, grid_keyword: s
     combination = []
     clicks = []
 
-
     if start_clicks is -1 or start_keys is -1 or start_full is -1:
         # ERROR
         is_valid = False
@@ -49,7 +48,7 @@ def validate_keyword(entered_keyword: str, keydown_keyword: str, grid_keyword: s
         keys = keydown_keyword[start_keys:]
         combination = entered_keyword[start_full:]
         clicks = grid_keyword[start_clicks:]
-        print('grid kwrd:',len(clicks),'  entered:',len(combination))
+        print('grid kwrd:', len(clicks), '  entered:', len(combination))
         combination, keys, clicks = filter_data(combination, keys, clicks)
 
         if len(combination) == 0 or len(clicks) == 0 or len(clicks) < MAX_POINTS:
@@ -133,20 +132,20 @@ def check_default_images(images_paths: [str], dir_path):
             print('!!! Error resizing -> ', name)
 
 
-def create_account(username: str, keyword_info: [str], image_path: str):
+def create_account(username: str, keyword_info: [str], image_path: str) -> bool:
     acc = Account(username, keyword_info)
-    _,acc = database.add_account(acc)
 
-    ## TODO
-    database.add_image_entry(image_path,acc,acc.get_username())
+    acc_added, acc = database.add_account(acc)
 
+    img_added, img = database.add_image_entry(image_path, acc, acc.get_username())
+
+    if acc_added and img_added:
+        return True
 
     #   TODO:
     #       implement account population
-    # get image first and save it
 
-    #
-    pass
+    return False
 
 
 if __name__ == '__main__':

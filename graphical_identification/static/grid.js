@@ -4,96 +4,126 @@ var points = initArray();
 const rowsNum = 40;
 const colsNum = 40;
 let numberOfPointsSelected = 0;
-
+var hasEnough = false;
+let gridClicked;
 window.onload = () => {
     let lastClicked;
 
-        const grid = clickableGrid(rowsNum, colsNum, function (el, row, col, i) {
-            //console.log("You clicked on item:", i);
-            // console.log("numberOfPointsSelected:", numberOfPointsSelected);
-            if (numberOfPointsSelected < MAX_NUM_POINTS) {
+    const grid = clickableGrid(rowsNum, colsNum, function (el, row, col, i) {
+        //console.log("You clicked on item:", i);
+        // console.log("numberOfPointsSelected:", numberOfPointsSelected);
 
-                if (el.className === 'clicked') {
-                    updatePoint(el,'remove',i);
+        if (numberOfPointsSelected < MAX_NUM_POINTS) {
 
-                } else {
-                    updatePoint(el,'add',i);
+            if (el.className === 'clicked') {
+                updatePoint(el,'remove',i);
 
-                }
+            } else {
+                updatePoint(el,'add',i);
+
+            }
+
+            update_keyword(el, 'click', i);
+            // console.log('number of points:');
+
+            updateCell(el);
+            /*// show hide selected cell's point
+            var span = el.children[0];
+            span.style.display = span.style.display === 'none' ? 'block' : 'none';*/
+        }else{
+            if(isAlreadySelected(el)) {
+                console.log('cell:', i, '  is already selected');
+                updatePoint(el,'remove',i);
+
 
                 update_keyword(el, 'click', i);
                 // console.log('number of points:');
 
                 updateCell(el);
-                /*// show hide selected cell's point
-                var span = el.children[0];
-                span.style.display = span.style.display === 'none' ? 'block' : 'none';*/
-            }else{
-                if(isAlreadySelected(el)) {
-                    /*
-                        TODO:
-                            showMessage();
-                        -maximum number of points is 4
-                    */
-                    console.log('cell:', i, '  is already selected');
-                    updatePoint(el,'remove',i);
 
-
-                    update_keyword(el, 'click', i);
-                    // console.log('number of points:');
-
-                    updateCell(el);
-
-                }
             }
-
-            console.log('number of points:', numberOfPointsSelected);
-        });
-
-        //init clickable grid
-        function clickableGrid(rows, cols, callback) {
-            let i = 0;
-            //const grid = document.createElement('table');
-            const grid = document.getElementById('grid-id');
-            //grid.className = 'grid';
-            //grid.id = 'grid-id';
-
-            for (let r = 0; r < rows; ++r) {
-                let tr = grid.appendChild(document.createElement('tr'));
-
-                for (let c = 0; c < cols; ++c) {
-                    let cell = tr.appendChild(document.createElement('td'));
-                    cell.className = 'cell';
-                    cell.id = 'cell-id';
-                    cell.style.borderStyle = 'hidden';
-                    cell.value = ++i;
-                    //cell.onclick();
-
-                    let span = cell.appendChild(document.createElement('span'));
-                    span.className = 'dot';
-                    span.style.display = 'none';
-
-                    cell.addEventListener('click', (function (el, r, c, i) {
-
-                        return function () {
-
-
-                            callback(el, r, c, i);
-                        }
-                    })
-                    (cell, r, c, i), false);
-                }
-            }
-
-            return grid;
         }
 
+        hasEnough = numberOfPointsSelected === MAX_NUM_POINTS;
 
-        document.getElementById('loading-gif').hidden = "hidden";
-    /*}else{
+        checkIfCredentialReady(el);
+        window.gridClicked = true;
+        console.log('has enough? ',hasEnough);
+        console.log('number of points:', numberOfPointsSelected);
+    });
 
-    }*/
+
+    //init clickable grid
+    function clickableGrid(rows, cols, callback) {
+        let i = 0;
+        //const grid = document.createElement('table');
+        const grid = document.getElementById('grid-id');
+        //grid.className = 'grid';
+        //grid.id = 'grid-id';
+
+        for (let r = 0; r < rows; ++r) {
+            let tr = grid.appendChild(document.createElement('tr'));
+
+            for (let c = 0; c < cols; ++c) {
+                let cell = tr.appendChild(document.createElement('td'));
+                cell.className = 'cell';
+                cell.id = 'cell-id';
+                cell.style.borderStyle = 'hidden';
+                cell.value = ++i;
+                //cell.onclick();
+
+                let span = cell.appendChild(document.createElement('span'));
+                span.className = 'dot';
+                span.style.display = 'none';
+
+                cell.addEventListener('click', (function (el, r, c, i) {
+
+                    return function () {
+                        //checkIfCredentialReady();
+
+                        callback(el, r, c, i);
+                    }
+                })
+                (cell, r, c, i), false);
+
+                // cell.oninput= checkIfCredentialReady();
+            }
+        }
+
+        return grid;
+    }
+
+    document.getElementById('loading-gif').hidden = "hidden";
+
+
+    window.gridClicked = true;
 };
+
+function checkIfClicked(){
+    document.getElementById('username_box').onclick = function() {
+        console.log('username clicked');
+        window.gridClicked=false;
+    };
+
+}
+
+function checkIfCredentialReady(elem) {
+    console.log('has?, ',window.hasEnough);
+    let icon = document.getElementById('help-icon');
+
+    if (!window.hasEnough || elem.value === '') {
+        console.log('button DISABLED');
+        document.getElementById('submit-btn').disabled = 'disabled';
+        //icon.style.border='3px solid red';
+
+    } else if(window.hasEnough && elem.value !== '') {
+        console.log('button ENABLED  ');
+        document.getElementById('submit-btn').disabled = '';
+        //icon.style.border='';
+    }
+    console.log('here:',window.numberOfPointsSelected );
+}
+
 
 function updatePoint(el,method,i){
     if (method==='remove'){
@@ -209,3 +239,4 @@ function showImportImage(){
 
     document.getElementById('grid').style.display = 'block';
 }
+

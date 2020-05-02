@@ -2,6 +2,7 @@
 <html>
 <head>
     <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
     <script src="https://code.jquery.com/jquery-1.12.4.min.js"></script>
     <script src="//code.jquery.com/jquery-1.11.1.min.js"></script>
     <script src="{{ url_for('.static',filename='displayGrid.js') }}"></script>
@@ -23,16 +24,18 @@
     <div style="text-align: center">
         <label>Username:</label>
         <label for="username_box"></label>
-        <input type="text" id="username_box" name="username_box">
+        <input type="text" id="username_box" name="username_box" onclick=checkIfClicked(this); oninput=checkIfCredentialReady(this)>
         <input type="hidden" id="image_path" name="image_path" value="{{ image_path }}">
 
         <input type="hidden" id="grid_keyword" name="grid_keyword">
         <input type="hidden" id="keydown_keyword" name="keydown_keyword">
         <input type="hidden" id="entered_keyword" name="entered_keyword">
 
-        <input type="submit" id="submit-btn" value="Submit" onclick=initValues(this)>
+        <input disabled type="submit" id="submit-btn" value="Submit" onclick=initValues(this);>
+        <img id="help-icon" src="https://img.icons8.com/plasticine/50/000000/help.png" style="position: fixed; top: 160px" title="Make sure you have 4 points selected and a username!"/>
     </div>
 </form>
+
 <br>
 
     <div id="grid-container" style="display: table">
@@ -45,7 +48,7 @@
         <img src="../static/loading.gif" id="loading-gif">
 
 
-        <table class="grid" id="grid-id" ></table>
+        <table class="grid" id="grid-id"></table>
 
     </div>
 
@@ -60,18 +63,30 @@
 </body>
 
 <script>
-
     function initValues(elem){
         document.getElementById('grid_keyword').value = document.getElementById('grid-keyword').textContent;
         document.getElementById('keydown_keyword').value = document.getElementById('keydown-keyword').textContent;
         document.getElementById('entered_keyword').value = document.getElementById('entered-keys').textContent;
     }
+
 </script>
 
 <script>
-    document.addEventListener('keydown', function(event) {
-        update_keyword('key-elem','keydown',event.key);
+    window.gridClicked = true;
+    checkIfClicked();
+   document.addEventListener('keydown', function (event) {
+        if(!window.gridClicked){
+            console.log('username box clicked');
+        }else if (window.gridClicked) {
+            console.log('GRID CLICKED');
+            update_keyword('key-elem', 'keydown', event.key);
+        }
     }, true);
+
+/*
+    function typingUsername(elem){
+       window.gridClicked = false;
+    }*/
 </script>
 
 <script>
@@ -120,7 +135,18 @@
     #submit-btn{
         text-align:center;
     }
-
+    #submit-btn:hover:after {
+/*        position: absolute;
+        top: 0;
+        left: 75%;
+        width: 100%;*/
+        content: attr(title);
+        background-color: #ffa;
+        color: #000;
+        line-height: 1.4em;
+        border: 1px solid #000;
+        /*box-shadow: 2px 2px 10px #999;*/
+    }
     /* style for GRID */
     .grid {
         border: 2px solid blue;
