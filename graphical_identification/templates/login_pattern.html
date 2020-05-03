@@ -1,11 +1,213 @@
 <!DOCTYPE html>
-<html lang="en">
+<html>
 <head>
-    <meta charset="UTF-8">
-    <title>Login Pattern page</title>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    <script src="{{ url_for('.static',filename='displayGrid.js') }}"></script>
+    <script src="{{ url_for('.static',filename='grid.js') }}"></script>
+    <script src="{{ url_for('.static',filename='update.js') }}"></script>
+    <title>Login Pattern Page</title>
 </head>
-<h1>Login Pattern</h1>
+
+<h1 style="text-align: center">Login Pattern</h1>
+<h3 style="text-align: center"> Enter you special combination</h3>
 <body>
 
+<div id="parent">
+    <div style="position:center;">
+        <form method="POST" action="/validate_login">
+
+
+                <button type="submit" id="submit-btn" value="Submit" onclick=initValues(this);>Submit</button>
+                <img id="help-icon" src="https://img.icons8.com/plasticine/50/000000/help.png" title="Make sure you have 4 points selected and a username!"/>
+
+                <input type="hidden" id="image_path" name="image_path" value="{{ image_path }}">
+
+                <input type="hidden" id="grid_keyword" name="grid_keyword">
+                <input type="hidden" id="keydown_keyword" name="keydown_keyword">
+                <input type="hidden" id="entered_keyword" name="entered_keyword">
+        </form>
+
+        <div id="points-container">
+            <img id="point1" src="https://img.icons8.com/color/48/000000/1-circle-c--v1.png"/>
+            <img id="point2" src="https://img.icons8.com/color/48/000000/2-circle-c--v1.png"/>
+            <img id="point3" src="https://img.icons8.com/color/48/000000/3-circle-c--v1.png"/>
+            <img id="point4" src="https://img.icons8.com/color/48/000000/4-circle-c--v1.png"/>
+        </div>
+    </div>
+
+
+    <div id="grid-container" style="display: table">
+        <img src="../static/loading.gif" id="loading-gif">
+        <table class="grid" id="grid-id"></table>
+    </div>
+
+</div>
+
+<div class="password-container">
+    <h3 id="grid-keyword">Grid-keyword:</h3>
+    <h3 id="keydown-keyword">Keydown-keyword:</h3>
+    <h3 id="entered-keys">Entered:</h3>
+</div>
+
+
 </body>
+
+<script>
+    function initValues(elem){
+        document.getElementById('grid_keyword').value = document.getElementById('grid-keyword').textContent;
+        document.getElementById('keydown_keyword').value = document.getElementById('keydown-keyword').textContent;
+        document.getElementById('entered_keyword').value = document.getElementById('entered-keys').textContent;
+    }
+
+</script>
+
+<script>
+    window.gridClicked = true;
+    checkIfClicked();
+    document.addEventListener('keydown', function (event) {
+        if(!window.gridClicked){
+            console.log('username box clicked');
+        }else if (window.gridClicked) {
+            console.log('GRID CLICKED');
+            update_keyword('key-elem', 'keydown', event.key);
+        }
+    }, true);
+
+    /*
+        function typingUsername(elem){
+           window.gridClicked = false;
+        }*/
+</script>
+
+<script>
+
+    $(document).ready(function(){
+        $(document).mousemove(function(){
+            if($("#point1:hover").length !== 0){
+                peekPoint(0);
+            } else{
+                resetPoint(0);
+            }
+
+            if($("#point2:hover").length !== 0){
+                peekPoint(1);
+            } else{
+                resetPoint(1);
+            }
+
+            if($("#point3:hover").length !== 0){
+                peekPoint(2);
+            } else{
+                resetPoint(2);
+            }
+
+            if($("#point4:hover").length !== 0){
+                peekPoint(3);
+            } else{
+                resetPoint(3);
+            }
+
+        });
+    });
+</script>
+
+
+
+
+
+
+<style>
+    #parent{
+        margin: auto;
+        width: 800px;
+    }
+    #points-container{
+        position: relative;
+        left: 20px;
+
+        display: inline-block;
+    }
+    #grid-container{
+        position: relative;
+        margin-left:auto;
+        margin-right:auto;
+    }
+
+    #submit-btn{
+        background-color: #00c979;
+        border: none;
+        color: white;
+        padding: 12px 16px;
+        font-size: 16px;
+        cursor: pointer;
+
+        position: relative;
+        text-align:center;
+
+        border-radius: 12px;
+
+        top: 45px;
+        right: -695px;
+    }
+    #submit-btn:hover {
+        background-color: RoyalBlue;
+    }
+
+    #help-icon{
+        position: relative;
+        display: inline-block;
+        top: 63px;
+        right: -545px;
+    }
+
+    /* style for GRID */
+    .grid {
+        border: 2px solid blue;
+
+        margin:1em auto;
+
+        background-image: url({{image_path}});
+        background-repeat:no-repeat;
+        background-position: center;
+        background-size: 790px 700px;
+    }
+
+    .grid td {
+        cursor:pointer;
+        width:15px;
+        height:15px;
+        border:1px solid #ccc;
+        text-align:center;
+        font-family:sans-serif; font-size:13px;
+        min-width: 15px;
+    }
+
+    .dot {
+        height: 15px;
+        width: 15px;
+
+        background-color: grey;
+        border-radius: 30%;
+        text-align: center;
+        display: none;
+        opacity: 0.7;
+    }
+
+
+    .point{
+        background:    #15d798;
+        border-radius: 1000px;
+        padding:       1px 6px;
+        color:         #ffffff;
+        display:       inline-block;
+        font:          normal bold 20px/1 "Calibri", sans-serif;
+        text-align:    center;
+    }
+
+
+
+</style>
+
+
 </html>

@@ -1,3 +1,6 @@
+import os
+
+
 class Image:
 
     def __init__(self, img_path_, name_, id_=None, acc_id_=None):
@@ -7,6 +10,7 @@ class Image:
         self.__account_id = acc_id_ if acc_id_ is not None else -1
 
     def get_path(self):
+
         return self.__img_path
 
     def get_account_id(self):
@@ -29,6 +33,11 @@ class Image:
             raise e
 
         return img
+
+    def get_local_path(self,upload_dir_path:str)->str:
+        image_path = self.__img_path.replace("\\","/").split(upload_dir_path)[1]
+        image_path = upload_dir_path + image_path
+        return image_path
 
     def __str__(self):
         return '\t Image: %s id:%d account_id:%s  name:%s' % (

@@ -20,6 +20,9 @@ class Account:
         self.__image = None
         self.__id = id_ if id_ is not None else -1
 
+        # not implemented yet
+        self.__in_order = False
+
     def get_username(self):
         return self.__username
 
@@ -35,6 +38,7 @@ class Account:
     def get_image(self) -> Image:
         return self.__image
 
+    # works only for the final_keyword
     def get_formatted_combination(self):
         out = []
         for entry in self.__final_keyword:
@@ -64,6 +68,21 @@ class Account:
     def get_email(self):
         return self.__email
 
+    def match(self, info: {}):
+        if self.__in_order:
+            pass
+
+        else:
+            clicks = info['grid_keyword']
+            keydowns = info['keydown_keyword']
+
+            if clicks == self.__grid_keydown:
+                if keydowns == self.__keydown_keyword:
+                    return True
+
+            print('clicks:', clicks,' | ',self.__grid_keydown)
+            print('keydowns:', keydowns,' | ',self.__keydown_keyword)
+        return False
 
 if __name__ == '__main__':
     comb = [(Key.KEYDOWN, 'd'), (Key.KEYDOWN, 'd'), (Key.KEYDOWN, 'd'), (Key.CLICK, 1), (Key.CLICK, 3), (Key.CLICK, 6),

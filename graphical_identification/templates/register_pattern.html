@@ -20,7 +20,7 @@
 </div>
 
 <!-- <form method="POST" action="/validate_register" id="form">  -->
-<form method="POST" action="/validate" id="form">
+<form method="POST" action="/validate_register" id="form">
     <div style="text-align: center">
         <label>Username:</label>
         <label for="username_box"></label>
@@ -32,7 +32,7 @@
         <input type="hidden" id="entered_keyword" name="entered_keyword">
 
         <input disabled type="submit" id="submit-btn" value="Submit" onclick=initValues(this);>
-        <img id="help-icon" src="https://img.icons8.com/plasticine/50/000000/help.png" style="position: fixed; top: 160px" title="Make sure you have 4 points selected and a username!"/>
+        <img id="help-icon" src="https://img.icons8.com/plasticine/50/000000/help.png" title="Make sure you have 4 points selected and a username!"/>
     </div>
 </form>
 
@@ -190,7 +190,14 @@
         font:          normal bold 20px/1 "Calibri", sans-serif;
         text-align:    center;
     }
+
+    #help-icon{
+        position: relative;
+        top: 20px;
+        left: 5px;
+    }
 </style>
+
 
 
 </html>

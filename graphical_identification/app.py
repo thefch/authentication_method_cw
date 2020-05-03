@@ -5,7 +5,7 @@ from flask_session import Session
 from werkzeug.utils import secure_filename
 
 from controller import validate_keyword, set_combination, check_default_images, get_default_images, check_image_size, \
-    create_account, get_account
+    create_account, get_account, check_if_credential_match
 
 app = Flask(__name__)
 
@@ -18,7 +18,6 @@ app.config['MAX_CONTENT_LENGTH'] = 16 * 1024 * 1024  # prevents uploading a file
 app.config['DEFAULT_IMAGES_PATH'] = DEFAULT_IMAGES_PATH
 app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
 app.config['SELECTED_IMAGE_PATH'] = None
-
 DEFAULT_IMAGES = get_default_images(DEFAULT_IMAGES_PATH)
 
 
@@ -35,10 +34,23 @@ def check_file_extension(file) -> [bool, str]:
         valid = True
     return valid, ext
 
+
 # TODO
 @app.route('/login_pattern')
 def login_pattern():
-    rsp = make_response(render_template('login_pattern.html'))
+    if 'account' not in session:
+        msg = "No account is session! Please login first."
+        rsp = make_response(redirect(url_for('login', msg=msg)))
+    else:
+        print('in session:', session['account'])
+        account = get_account(session['account'])
+        print('account:', account)
+        image_path = account.get_image().get_local_path(app.config['UPLOAD_FOLDER'])
+
+        print('image path:', image_path)
+        print('name:', account.get_image().get_name())
+
+        rsp = make_response(render_template('login_pattern.html', image_path=image_path))
 
     return rsp
 
@@ -55,52 +67,97 @@ def find_user():
         msg = "Invalid username!"
         print(msg)
         # rsp = make_response(render_template('login.html', msg=msg))
+        session.pop('account')
         rsp = make_response(redirect(url_for('login', msg=msg)))
     else:
+        print('ACCOUNTT IN SESSION HERE:  ', username)
         acc = get_account(username)
-        msg = ''
-        rsp = make_response(redirect(url_for('login_pattern', msg=msg, images_paths=DEFAULT_IMAGES)))
+        session['account'] = acc.get_username()
+        print('ACCOUNTT IN SESSION HERE:  ', acc)
+        rsp = make_response(redirect(url_for('login_pattern', img_path=acc.get_image().get_path())))
 
     return rsp
 
 
-@app.route('/validate_register', methods=['POST'])
-def validate_register():
-    username = ''
-    image_path = ''
-    keyword = None
+@app.route('/validate_login', methods=['POST'])
+def validate_login():
+    grid_keyword = ''
+    keydown_keyword = ''
+    entered_keyword = ''
     try:
-        username = request.form['username_box']
+        grid_keyword = request.form["grid_keyword"]
+        keydown_keyword = request.form["keydown_keyword"]
+        entered_keyword = request.form["entered_keyword"]
+        print('grid kwrd:', grid_keyword)
+        print('keydown kwrd:', keydown_keyword)
+        print('entered kwrd:', entered_keyword)
     except Exception as e:
         print(e)
 
-    try:
-        image_path = request.form['image_path']
-    except Exception as e:
-        print(e)
+    is_valid, combination, keys, clicks = validate_keyword(entered_keyword, keydown_keyword, grid_keyword)
+    if is_valid:
+        final_keyword = set_combination(combination, keys, clicks)
+        keyword_info = {
+            'grid_keyword': clicks,
+            'keydown_keyword': keys,
+            'entered_keyword': combination,
+            'final_keyword': final_keyword}
 
-    try:
-        keyword = ''
-    except Exception as e:
-        print(e)
+        if 'account' in session:
+            matches = check_if_credential_match(session['account'], keyword_info)
+            if matches:
+                rsp='SUCCESSFUL!!!'
+            else:
+                rsp=' not SUCCESSFUL!!!'
 
-    print('username:', username)
-    print('image_path:', image_path)
-
-    if image_path.strip() is '' or username.strip() is '':
-        msg = 'Account creation failed. Make sure to add a username and points on the image!'
-        rsp = make_response(redirect(url_for('register', msg=msg, images_paths=DEFAULT_IMAGES)))
-    elif keyword is None:
-        msg = 'Account creation failed. Something went wrong with the keyword!'
-        rsp = make_response(redirect(url_for('register', msg=msg, images_paths=DEFAULT_IMAGES)))
+        else:
+            # no user loged in, kick out
+            msg = "Session Expired!"
+            rsp = make_response(redirect(url_for("index", msg=msg)))
     else:
-        # validation is successful
-
-        create_account(username, keyword, image_path)
-        msg = 'Account created successful: {}'.format(username)
+        msg = 'Account creation failed. Make sure to add a username and points(max 4) on the image!'
         rsp = make_response(redirect(url_for('register', msg=msg, images_paths=DEFAULT_IMAGES)))
 
     return rsp
+
+
+# @app.route('/validate_register', methods=['POST'])
+# def validate_register():
+#     username = ''
+#     image_path = ''
+#     keyword = None
+#     try:
+#         username = request.form['username_box']
+#     except Exception as e:
+#         print(e)
+#
+#     try:
+#         image_path = request.form['image_path']
+#     except Exception as e:
+#         print(e)
+#
+#     try:
+#         keyword = ''
+#     except Exception as e:
+#         print(e)
+#
+#     print('username:', username)
+#     print('image_path:', image_path)
+#
+#     if image_path.strip() is '' or username.strip() is '':
+#         msg = 'Account creation failed. Make sure to add a username and points on the image!'
+#         rsp = make_response(redirect(url_for('register', msg=msg, images_paths=DEFAULT_IMAGES)))
+#     elif keyword is None:
+#         msg = 'Account creation failed. Something went wrong with the keyword!'
+#         rsp = make_response(redirect(url_for('register', msg=msg, images_paths=DEFAULT_IMAGES)))
+#     else:
+#         # validation is successful
+#
+#         create_account(username, keyword, image_path)
+#         msg = 'Account created successful: {}'.format(username)
+#         rsp = make_response(redirect(url_for('register', msg=msg, images_paths=DEFAULT_IMAGES)))
+#
+#     return rsp
 
 
 @app.route('/register_pattern')
@@ -199,8 +256,8 @@ def choose_image():
 
 
 # rename to validate_login if is used just for login
-@app.route('/validate', methods=['POST'])
-def validate():
+@app.route('/validate_register', methods=['POST'])
+def validate_register():
     grid_keyword = ''
     keydown_keyword = ''
     entered_keyword = ''
@@ -231,10 +288,11 @@ def validate():
     if is_valid and username.strip() != '' and image_path.strip() != '':
         final_keyword = set_combination(combination, keys, clicks)
         keyword_info = {
-            'grid_keyword': grid_keyword,
-            'keydown_keyword': keydown_keyword,
-            'entered_keyword': entered_keyword,
+            'grid_keyword': clicks,
+            'keydown_keyword': keys,
+            'entered_keyword': combination,
             'final_keyword': final_keyword}
+
         create_account(username, keyword_info, image_path)
         rsp = make_response(render_template("login.html", img_path=image_path))
     else:

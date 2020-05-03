@@ -1,7 +1,5 @@
-import codecs
 import json
 import os
-import pickle
 import sqlite3
 from sqlite3 import Error
 
@@ -91,10 +89,14 @@ class Database:
             acc = cur.fetchone()
             if acc is not None:
                 dic = self.__get_enum_combination_format(acc[2])
+                clicks = json.loads(acc[6])
+                keydowns = json.loads(acc[5])
+                comb = json.loads(acc[4])
+
                 keyword_info = {
-                    'grid_keyword': acc[6],
-                    'keydown_keyword': acc[5],
-                    'entered_keyword': acc[4],
+                    'grid_keyword': clicks,
+                    'keydown_keyword': keydowns,
+                    'entered_keyword': comb,
                     'final_keyword': dic}
                 account = Account(acc[1], keyword_info, acc[0])
                 print("Account retrieved -> %s" % account.get_username())
@@ -138,9 +140,13 @@ class Database:
 
         username = account.get_username()
         final_keyword = json.dumps(account.get_formatted_combination())
-        entered_keyword = account.get_keyword_info('entered_keyword')
-        keydown_keyword = account.get_keyword_info('keydown_keyword')
-        grid_keyword = account.get_keyword_info('grid_keyword')
+        # entered_keyword = account.get_keyword_info('entered_keyword')
+        entered_keyword = json.dumps(account.get_keyword_info('entered_keyword'))
+        # keydown_keyword = account.get_keyword_info('keydown_keyword')
+        keydown_keyword = json.dumps(account.get_keyword_info('keydown_keyword'))
+        # grid_keyword = account.get_keyword_info('grid_keyword')
+        grid_keyword = json.dumps(account.get_keyword_info('grid_keyword'))
+
         email = account.get_email()
         query = """INSERT INTO accounts_tb ('username','keyword','email','entered_keyword','keydown_keyword','grid_keyword')
                     VALUES(?,?,?,?,?,?);"""
@@ -374,7 +380,6 @@ class Database:
             cur.execute(query, args)
             entry = cur.fetchone()
             if entry is not None:
-                print(entry[1])
                 photo_path = os.path.abspath("static/images/users/") + '\\' + str(name) + ".jpg"
                 # photoPath = "images/" + str(name) + ".jpg"
                 self.__write_to_file(entry[1], photo_path)
@@ -418,18 +423,13 @@ class Database:
     @staticmethod
     def __write_to_file(data, filepath):
         # Convert binary data to proper format and write it on Hard Disk
-
-        print(type(data))
-        print(type(filepath))
         try:
-
             with open(filepath, 'wb') as file:
                 file.write(data)
             print("Stored blob data into: ", filepath, "\n")
-            return True
         except Exception as e:
             raise e
-            return False
+
 
 if __name__ == '__main__':
     testing = True

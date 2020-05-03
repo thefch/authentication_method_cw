@@ -150,9 +150,17 @@ def create_account(username: str, keyword_info: [str], image_path: str) -> bool:
 
 def get_account(username):
     acc = database.get_account(username)
-    print(acc)
-    print(acc.get_image())
     return acc
+
+
+def check_if_credential_match(username: str, keyword_info: {}) -> bool:
+
+    account = database.get_account(username)
+
+    return account.match(keyword_info)
+
+    # return False
+
 
 if __name__ == '__main__':
     default_images_path = 'static/images/default/'
