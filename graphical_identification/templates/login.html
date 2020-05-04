@@ -1,23 +1,25 @@
 {% extends 'base.html' %}
 {% block body_content %}
 <head>
-    <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
+
     <link type="text/css" rel="stylesheet" href="{{ url_for('static', filename='stylesheets/login-stylesheet.css') }}"/>
+    <!--<link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
     <link href="//netdna.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap.min.css" rel="stylesheet" id="bootstrap-css">
+    -->
     <title>Login</title>
 </head>
 
 <h1 style="text-align: center">Login Page</h1>
-
-    <form method="POST" action="/find_user">
-        <div  id="enter-usr-box">
-            <label>Username:</label>
-            <label for="username_box"></label>
-            <input type="text" id="username_box" name="username_box">
-            <input type="submit" id="submit-btn" value="Enter">
-        </div>
-    </form>
-
+    <div id="form-container">
+        <form method="POST" action="/find_user">
+            <div  id="enter-usr-box">
+                <label>Username:</label>
+                <label for="username_box"></label>
+                <input type="text" id="username_box" name="username_box" required>
+                <input type="submit" id="submit-btn" value="Enter">
+            </div>
+        </form>
+    </div>
 
 
 

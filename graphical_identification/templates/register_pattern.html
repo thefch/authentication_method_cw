@@ -61,9 +61,42 @@
     </div>
 
 <div class="password-container">
-    <h3 id="grid-keyword">Grid-keyword:</h3>
-    <h3 id="keydown-keyword">Keydown-keyword:</h3>
-    <h3 id="entered-keys">Entered:</h3>
+    <table id="keywords-tb" >
+        <tr>
+            <td>
+                <button>X</button>
+            </td>
+            <td>
+                <label for="grid-keyword">Grid Keyword</label>
+            </td>
+            <td>
+                <input type="text" id="grid-keyword" value="" readonly>
+            </td>
+        </tr>
+        <tr>
+            <td>
+                <button>X</button>
+            </td>
+            <td>
+                <label for="keydown-keyword">Keydown Keyword</label>
+            </td>
+            <td>
+                <input type="text" id="keydown-keyword" value="" readonly>
+            </td>
+        </tr>
+        <tr>
+            <td>
+                <button>X</button>
+            </td>
+            <td>
+                <label for="entered-keyword">Entered Keyword</label>
+            </td>
+            <td>
+                <input type="text" id="entered-keyword" value="" readonly>
+            </td>
+        </tr>
+    </table>
+
 </div>
 
 
@@ -155,6 +188,15 @@
 
 
 <style>
+    #keywords-tb{
+        width: 60%;
+    }
+    #keywords-tb tr td input{
+        border-radius: 5px;
+        background: white;
+        border: 1px solid gray;
+    }
+
     #grid-container{
         position: relative;
         margin-left:auto;

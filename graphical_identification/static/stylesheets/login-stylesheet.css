@@ -4,16 +4,15 @@
     font-family: Helvetica Neue,Helvetica,Arial,sans-serif;
 }
 
-#error-msg{
-    position: center;
-    text-align: center;
-    float: top;
-    font-family: Helvetica Neue,Helvetica,Arial,sans-serif;
-}
-
 #enter-usr-box{
     margin-top: 10%;
     text-align: center;
     font-family: Helvetica Neue,Helvetica,Arial,sans-serif;
+}
 
+
+#form-container{
+    width: 100px;
+    height: 50px;
+    border: solid black 4px;
 }

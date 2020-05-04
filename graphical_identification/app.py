@@ -22,11 +22,6 @@ DEFAULT_IMAGES = get_default_images(DEFAULT_IMAGES_PATH)
 
 isrunning = True
 
-
-#   TODO
-#       * check validation for / and range of values
-#       * rearrange submit button in register page
-
 def check_file_extension(file) -> [bool, str]:
     parts = file.filename.split('.')
     ext = parts[-1]
@@ -74,8 +69,6 @@ def find_user():
     if username.strip() is '' or username is None:
         msg = "Invalid username!"
         print(msg)
-        # rsp = make_response(render_template('login.html', msg=msg))
-        session.pop('account')
         rsp = make_response(redirect(url_for('login', msg=msg)))
     else:
         acc = get_account(username)
