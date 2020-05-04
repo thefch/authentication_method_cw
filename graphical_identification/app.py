@@ -1,7 +1,7 @@
 import os
 
 from flask import Flask, render_template, make_response, request, url_for, redirect, session, flash
-from flask_session import Session
+
 from werkzeug.utils import secure_filename
 
 from controller import validate_keyword, set_combination, check_default_images, get_default_images, check_image_size, \
@@ -19,6 +19,8 @@ app.config['DEFAULT_IMAGES_PATH'] = DEFAULT_IMAGES_PATH
 app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
 app.config['SELECTED_IMAGE_PATH'] = None
 DEFAULT_IMAGES = get_default_images(DEFAULT_IMAGES_PATH)
+
+isrunning = True
 
 
 #   TODO
@@ -38,19 +40,25 @@ def check_file_extension(file) -> [bool, str]:
 # TODO
 @app.route('/login_pattern')
 def login_pattern():
-    if 'account' not in session:
+    username_on_hold = ''
+    try:
+        username_on_hold = request.args['username_on_hold']
+    except Exception as e:
+        pass
+
+    if username_on_hold.strip() is '':
         msg = "No account is session! Please login first."
         rsp = make_response(redirect(url_for('login', msg=msg)))
     else:
-        print('in session:', session['account'])
-        account = get_account(session['account'])
-        print('account:', account)
+        account = get_account(username_on_hold)
+        print(' ACCOUNT ON HOLD:', account)
         image_path = account.get_image().get_local_path(app.config['UPLOAD_FOLDER'])
 
-        print('image path:', image_path)
-        print('name:', account.get_image().get_name())
+        # print('image path:', image_path)
+        # print('name:', account.get_image().get_name())
 
-        rsp = make_response(render_template('login_pattern.html', image_path=image_path))
+        rsp = make_response(
+            render_template('login_pattern.html', username_on_hold=username_on_hold, image_path=image_path))
 
     return rsp
 
@@ -70,12 +78,16 @@ def find_user():
         session.pop('account')
         rsp = make_response(redirect(url_for('login', msg=msg)))
     else:
-        print('ACCOUNTT IN SESSION HERE:  ', username)
         acc = get_account(username)
-        session['account'] = acc.get_username()
-        print('ACCOUNTT IN SESSION HERE:  ', acc)
-        rsp = make_response(redirect(url_for('login_pattern', img_path=acc.get_image().get_path())))
-
+        if acc is not None:
+            # session['account'] = acc.get_username()
+            print('ACCOUNT ON HOLD:  ', acc)
+            rsp = make_response(
+                redirect(url_for('login_pattern', username_on_hold=username, img_path=acc.get_image().get_path())))
+        else:
+            msg = "Account with these credential does not exist!"
+            rsp = make_response(
+                redirect(url_for('login', msg=msg)))
     return rsp
 
 
@@ -84,13 +96,16 @@ def validate_login():
     grid_keyword = ''
     keydown_keyword = ''
     entered_keyword = ''
+    username_on_hold = ''
     try:
         grid_keyword = request.form["grid_keyword"]
         keydown_keyword = request.form["keydown_keyword"]
         entered_keyword = request.form["entered_keyword"]
+        username_on_hold = request.form["username"]
         print('grid kwrd:', grid_keyword)
         print('keydown kwrd:', keydown_keyword)
         print('entered kwrd:', entered_keyword)
+        print('username on hold:', username_on_hold)
     except Exception as e:
         print(e)
 
@@ -103,61 +118,25 @@ def validate_login():
             'entered_keyword': combination,
             'final_keyword': final_keyword}
 
-        if 'account' in session:
-            matches = check_if_credential_match(session['account'], keyword_info)
+        if username_on_hold.strip() is not '':
+            matches = check_if_credential_match(username_on_hold, keyword_info)
             if matches:
-                rsp='SUCCESSFUL!!!'
+                session['account'] = username_on_hold
+                msg = "Login Successful :" + username_on_hold
+                rsp = make_response(redirect(url_for('index', msg=msg, username=username_on_hold)))
             else:
-                rsp=' not SUCCESSFUL!!!'
+                msg = 'Account with these credential does not exist!'
+                rsp = make_response(redirect(url_for('index', msg=msg)))
 
         else:
-            # no user loged in, kick out
+            # no user logged in, kick out
             msg = "Session Expired!"
             rsp = make_response(redirect(url_for("index", msg=msg)))
     else:
-        msg = 'Account creation failed. Make sure to add a username and points(max 4) on the image!'
-        rsp = make_response(redirect(url_for('register', msg=msg, images_paths=DEFAULT_IMAGES)))
+        msg = 'Account with these credential does not exist!'
+        rsp = make_response(redirect(url_for('index', msg=msg, images_paths=DEFAULT_IMAGES)))
 
     return rsp
-
-
-# @app.route('/validate_register', methods=['POST'])
-# def validate_register():
-#     username = ''
-#     image_path = ''
-#     keyword = None
-#     try:
-#         username = request.form['username_box']
-#     except Exception as e:
-#         print(e)
-#
-#     try:
-#         image_path = request.form['image_path']
-#     except Exception as e:
-#         print(e)
-#
-#     try:
-#         keyword = ''
-#     except Exception as e:
-#         print(e)
-#
-#     print('username:', username)
-#     print('image_path:', image_path)
-#
-#     if image_path.strip() is '' or username.strip() is '':
-#         msg = 'Account creation failed. Make sure to add a username and points on the image!'
-#         rsp = make_response(redirect(url_for('register', msg=msg, images_paths=DEFAULT_IMAGES)))
-#     elif keyword is None:
-#         msg = 'Account creation failed. Something went wrong with the keyword!'
-#         rsp = make_response(redirect(url_for('register', msg=msg, images_paths=DEFAULT_IMAGES)))
-#     else:
-#         # validation is successful
-#
-#         create_account(username, keyword, image_path)
-#         msg = 'Account created successful: {}'.format(username)
-#         rsp = make_response(redirect(url_for('register', msg=msg, images_paths=DEFAULT_IMAGES)))
-#
-#     return rsp
 
 
 @app.route('/register_pattern')
@@ -263,16 +242,25 @@ def validate_register():
     entered_keyword = ''
     username = ''
     image_path = ''
+    keydown_inorder = None
     keyword = None
     try:
         grid_keyword = request.form["grid_keyword"]
         keydown_keyword = request.form["keydown_keyword"]
         entered_keyword = request.form["entered_keyword"]
+        keydown_inorder = request.form["keydown_in_order"]
         print('grid kwrd:', grid_keyword)
         print('keydown kwrd:', keydown_keyword)
         print('entered kwrd:', entered_keyword)
+        print('keydown in order:',keydown_inorder)
     except Exception as e:
         print(e)
+
+    if keydown_inorder is None:
+        keydown_inorder =False
+    else:
+        keydown_inorder = bool(keydown_inorder)
+    print('KEYDOWN IN ORDEr:',keydown_inorder)
 
     try:
         username = request.form['username_box']
@@ -293,8 +281,10 @@ def validate_register():
             'entered_keyword': combination,
             'final_keyword': final_keyword}
 
-        create_account(username, keyword_info, image_path)
-        rsp = make_response(render_template("login.html", img_path=image_path))
+        create_account(username, keyword_info, image_path, keydown_inorder)
+        # rsp = make_response(render_template("login.html", img_path=image_path))
+        msg="Account successfully created: "+username
+        rsp = make_response(redirect(url_for("index",msg=msg)))
     else:
         msg = 'Account creation failed. Make sure to add a username and points(max 4) on the image!'
         rsp = make_response(redirect(url_for('register', msg=msg, images_paths=DEFAULT_IMAGES)))
@@ -320,6 +310,12 @@ def register():
     return rsp
 
 
+@app.route('/logout')
+def logout():
+    session.pop('account')
+    return make_response(redirect(url_for('index', msg='LOGGED OUT')))
+
+
 @app.route('/login', methods=['POST', 'GET'])
 def login():
     # 789 x 770
@@ -338,9 +334,34 @@ def login():
 
 @app.route('/')
 def index():
+    # just to cut road
+    # not ideal
+    global isrunning
+    if isrunning:
+        # resets the session everytime the server runs
+        session.clear()
+        isrunning = False
+
+    msg = None
+    try:
+        msg = request.args['msg']
+        print('Message found from register request:', msg)
+    except:
+        pass
     check_default_images(DEFAULT_IMAGES, DEFAULT_IMAGES_PATH)
 
-    rsp = make_response(render_template("index.html"))
+    if 'account' in session:
+        print('account in session:', session['account'])
+        if msg is not None:
+            rsp = make_response(
+                render_template("index.html", msg=msg, username=session['account']))
+        else:
+            rsp = make_response(render_template("index.html", username=session['account']))
+    else:
+        if msg is not None:
+            rsp = make_response(render_template("index.html", msg=msg))
+        else:
+            rsp = make_response(render_template("index.html"))
     return rsp
 
 

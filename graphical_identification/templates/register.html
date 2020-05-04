@@ -1,5 +1,5 @@
-<!DOCTYPE html>
-<html lang="en">
+{% extends 'base.html' %}
+{% block body_content %}
 <head>
     <link type="text/css" rel="stylesheet" href="{{ url_for('static', filename='stylesheets/register-stylesheet.css') }}"/>
     <script src="//code.jquery.com/jquery-1.11.1.min.js"></script>
@@ -14,18 +14,9 @@
     <title>Register</title>
 </head>
 
-    <h1 style="text-align: center">Register Page</h1>
-
 <body>
-    {% if msg %}
-        <div class="alert alert-warning page-alert" id="error-msg">
-            <button type="button" class="close"><span aria-hidden="true">×</span></button>
-            {{ msg }}
-        </div>
 
-    {% endif %}
-
-    <h3 style="text-align: center">Chose an image</h3>
+    <h3 style="text-align: center; font-size:33px" >Chose an image</h3>
     <div class="alert alert-warning page-alert" id="resolution-msg">
         <button type="button" class="close"><span aria-hidden="true">×</span></button>
         <strong>Warning!</strong> Image's resolution might change if is not in the range of 700x700 and 800x800.
@@ -110,4 +101,5 @@
     });
 
 </script>
-</html>
+
+{% endblock %}

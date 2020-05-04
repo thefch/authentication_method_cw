@@ -21,7 +21,7 @@ class Account:
         self.__id = id_ if id_ is not None else -1
 
         # not implemented yet
-        self.__in_order = False
+        self.__keydown_in_order = False
 
     def get_username(self):
         return self.__username
@@ -59,30 +59,71 @@ class Account:
 
     def __str__(self):
         if self.__image is not None:
-            return "%s username:%s pass:%s img_id:%s" % (
-                self.__id, self.__username, self.__final_keyword, self.__image.get_id())
+            return "%s username:%s pass:%s img_id:%s  keydown_inorder:%s" % (
+                self.__id, self.__username, self.__final_keyword, self.__image.get_id(), self.__keydown_in_order)
         else:
-            return "%s username:%s pass:%s" % (
-                self.__id, self.__username, self.__final_keyword)
+            return "%s username:%s pass:%s  keydown_inorder:%s" % (
+                self.__id, self.__username, self.__final_keyword, self.__keydown_in_order)
+
+    def keydown_is_inorder(self, keyword_inorder):
+        self.__keydown_in_order = keyword_inorder
 
     def get_email(self):
         return self.__email
 
-    def match(self, info: {}):
-        if self.__in_order:
-            pass
+    def get_keydown_in_order(self):
+        return self.__keydown_in_order
 
+    def __clicks_match_no_order(self, inp) -> bool:
+        # the need to be the same size
+        if len(inp) == len(self.__grid_keydown):
+            for i in inp:
+                # if a character is not i list, no match
+                if i not in self.__grid_keydown:
+                    return False
+            return True
         else:
-            clicks = info['grid_keyword']
-            keydowns = info['keydown_keyword']
+            return False
 
-            if clicks == self.__grid_keydown:
-                if keydowns == self.__keydown_keyword:
+    def __keydowns_match_no_order(self, inp) -> bool:
+        # the need to be the same size
+        if len(inp) == len(self.__keydown_keyword):
+            for i in inp:
+                # if a character is not i list, no match
+                if i not in self.__keydown_keyword:
+                    return False
+            return True
+        else:
+            return False
+
+    # the keydown characters must be in order
+    def __keydowns_match_in_order(self, inp) -> bool:
+        if len(inp) == len(self.__keydown_keyword):
+            for i, x in enumerate(inp):
+                # if a character is not i list, no match
+                if inp[i] != self.__keydown_keyword[i]:
+                    return False
+            return True
+        else:
+            return False
+
+    def match(self, info: {}):
+        clicks = info['grid_keyword']
+        keydowns = info['keydown_keyword']
+
+        if self.__keydown_in_order:
+            if self.__clicks_match_no_order(clicks):
+                if self.__keydowns_match_in_order(keydowns):
+                    return True
+        else:
+            if self.__clicks_match_no_order(clicks):  # no order
+                if keydowns == self.__keydown_keyword:  # in order
                     return True
 
-            print('clicks:', clicks,' | ',self.__grid_keydown)
-            print('keydowns:', keydowns,' | ',self.__keydown_keyword)
+        print('clicks:', clicks, ' | ', self.__grid_keydown)
+        print('keydowns:', keydowns, ' | ', self.__keydown_keyword)
         return False
+
 
 if __name__ == '__main__':
     comb = [(Key.KEYDOWN, 'd'), (Key.KEYDOWN, 'd'), (Key.KEYDOWN, 'd'), (Key.CLICK, 1), (Key.CLICK, 3), (Key.CLICK, 6),

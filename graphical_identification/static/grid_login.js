@@ -5,14 +5,10 @@ const rowsNum = 40;
 const colsNum = 40;
 let numberOfPointsSelected = 0;
 var hasEnough = false;
-let usernameBoxClicked;
 window.onload = () => {
     let lastClicked;
 
     const grid = clickableGrid(rowsNum, colsNum, function (el, row, col, i) {
-        //console.log("You clicked on item:", i);
-        // console.log("numberOfPointsSelected:", numberOfPointsSelected);
-
         if (numberOfPointsSelected < MAX_NUM_POINTS) {
 
             if (el.className === 'clicked') {
@@ -46,7 +42,6 @@ window.onload = () => {
 
         hasEnough = numberOfPointsSelected === MAX_NUM_POINTS;
 
-        checkIfCredentialReady(el);
         console.log('has enough? ',hasEnough);
         console.log('number of points:', numberOfPointsSelected);
     });
@@ -94,26 +89,8 @@ window.onload = () => {
 
     document.getElementById('loading-gif').hidden = "hidden";
 
+
 };
-
-
-function checkIfCredentialReady(elem) {
-    console.log('has?, ',window.hasEnough);
-    let icon = document.getElementById('help-icon');
-
-    if (!window.hasEnough || elem.value === '') {
-        console.log('button DISABLED');
-        document.getElementById('submit-btn').disabled = 'disabled';
-        //icon.style.border='3px solid red';
-
-    } else if(window.hasEnough && elem.value !== '') {
-        console.log('button ENABLED  ');
-        document.getElementById('submit-btn').disabled = '';
-        //icon.style.border='';
-    }
-    console.log('here:',window.numberOfPointsSelected );
-}
-
 
 function updatePoint(el,method,i){
     if (method==='remove'){

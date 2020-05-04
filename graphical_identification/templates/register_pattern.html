@@ -1,5 +1,5 @@
-<!DOCTYPE html>
-<html>
+{% extends 'base.html' %}
+{% block body_content %}
 <head>
     <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
@@ -14,9 +14,9 @@
 
 <body>
 <div style="text-align: center">
-    <h1>Register your pattern</h1>
-    <h2><strong>Click on the image to add points (total 4 points)</strong></h2>
-    <h2>You can also add keyword while doing that to increase security</h2>
+    <h1 style="font-family: Helvetica Neue,Helvetica,Arial,sans-serif; font-size: 35px">Register your pattern</h1>
+    <h2 style="font-family: Helvetica Neue,Helvetica,Arial,sans-serif; font-size: 25px"><strong>Click on the image to add points (total 4 points)</strong></h2>
+    <h2 style="font-family: Helvetica Neue,Helvetica,Arial,sans-serif; font-size: 20px">You can also add keyword while doing that to increase security</h2>
 </div>
 
 <!-- <form method="POST" action="/validate_register" id="form">  -->
@@ -24,15 +24,23 @@
     <div style="text-align: center">
         <label>Username:</label>
         <label for="username_box"></label>
-        <input type="text" id="username_box" name="username_box" onclick=checkIfClicked(this); oninput=checkIfCredentialReady(this)>
+        <input type="text" id="username_box" name="username_box" onclick=checkIfClicked(this); oninput=checkIfCredentialReady(this) required>
         <input type="hidden" id="image_path" name="image_path" value="{{ image_path }}">
 
         <input type="hidden" id="grid_keyword" name="grid_keyword">
         <input type="hidden" id="keydown_keyword" name="keydown_keyword">
         <input type="hidden" id="entered_keyword" name="entered_keyword">
 
+
         <input disabled type="submit" id="submit-btn" value="Submit" onclick=initValues(this);>
         <img id="help-icon" src="https://img.icons8.com/plasticine/50/000000/help.png" title="Make sure you have 4 points selected and a username!"/>
+
+        <br>
+        <div class="custom-control custom-checkbox">
+            <input type="checkbox" class="custom-control-input" name="keydown_in_order" id="keydown_in_order" value="False" onclick="toggle_check(this)">
+            <label class="custom-control-label" for="keydown_in_order">Keyword in order</label>
+        </div>
+
     </div>
 </form>
 
@@ -69,24 +77,44 @@
         document.getElementById('entered_keyword').value = document.getElementById('entered-keys').textContent;
     }
 
+    function toggle_check(elem) {
+        if (elem.value === "False") {
+            elem.value = "True";
+            console.log('Toggle to true, ',elem.value);
+        } else if (elem.value === "True") {
+            elem.value = "False";
+            console.log('Toggle to false,  ',elem.value);
+        }
+    }
+
 </script>
 
 <script>
-    window.gridClicked = true;
-    checkIfClicked();
+    window.usernameBoxClicked = false;
+
+    $("body").click(function() {
+        let target = document.getElementById("username_box");
+        let flag = event.path.some(function(el, i, arr) {
+            return (el === target)
+        });
+        if (flag) {
+            window.usernameBoxClicked = true;
+            console.log("Inside")
+        } else {
+            window.usernameBoxClicked = false;
+            console.log("Outside")
+        }
+    });
+
    document.addEventListener('keydown', function (event) {
-        if(!window.gridClicked){
+        if(window.usernameBoxClicked){
             console.log('username box clicked');
-        }else if (window.gridClicked) {
-            console.log('GRID CLICKED');
+        }else if (!window.usernameBoxClicked) {
+            console.log('username box NOT clicked');
             update_keyword('key-elem', 'keydown', event.key);
         }
     }, true);
 
-/*
-    function typingUsername(elem){
-       window.gridClicked = false;
-    }*/
 </script>
 
 <script>
@@ -118,6 +146,7 @@
             }
 
         });
+
     });
 </script>
 
@@ -161,12 +190,12 @@
 
     .grid td {
         cursor:pointer;
-        width:15px;
-        height:15px;
+        width:17px;
+        height:17px;
         border:1px solid #ccc;
         text-align:center;
         font-family:sans-serif; font-size:13px;
-        min-width: 15px;
+        min-width: 17px;
     }
 
     .dot {
@@ -193,11 +222,11 @@
 
     #help-icon{
         position: relative;
-        top: 20px;
+        top: -2px;
         left: 5px;
     }
 </style>
 
 
 
-</html>
+{% endblock %}

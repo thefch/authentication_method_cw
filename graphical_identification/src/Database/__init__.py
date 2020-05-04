@@ -99,7 +99,9 @@ class Database:
                     'entered_keyword': comb,
                     'final_keyword': dic}
                 account = Account(acc[1], keyword_info, acc[0])
-                print("Account retrieved -> %s" % account.get_username())
+                if acc[7]:
+                    account.keydown_is_inorder(acc[7])
+                print("Account retrieved -> %s" % account)
 
                 img = self.get_image_entry(account)
                 account.set_image(img)
@@ -147,11 +149,12 @@ class Database:
         # grid_keyword = account.get_keyword_info('grid_keyword')
         grid_keyword = json.dumps(account.get_keyword_info('grid_keyword'))
 
+        keydown_inorder = account.get_keydown_in_order()
         email = account.get_email()
-        query = """INSERT INTO accounts_tb ('username','keyword','email','entered_keyword','keydown_keyword','grid_keyword')
-                    VALUES(?,?,?,?,?,?);"""
+        query = """INSERT INTO accounts_tb ('username','keyword','email','entered_keyword','keydown_keyword','grid_keyword','keydown_inorder')
+                    VALUES(?,?,?,?,?,?,?);"""
 
-        args = (username, final_keyword, email, entered_keyword, keydown_keyword, grid_keyword)
+        args = (username, final_keyword, email, entered_keyword, keydown_keyword, grid_keyword,keydown_inorder)
 
         updated_acc = account
         successful = False
@@ -163,7 +166,7 @@ class Database:
 
             updated_acc.set_id(temp_id)
             successful = True
-            print('Account created: ', temp_id, account.get_username())
+            print('Account created: ', updated_acc)
         except Exception as err:
             print(err)
 

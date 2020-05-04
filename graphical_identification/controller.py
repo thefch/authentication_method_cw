@@ -132,9 +132,9 @@ def check_default_images(images_paths: [str], dir_path):
             print('!!! Error resizing -> ', name)
 
 
-def create_account(username: str, keyword_info: [str], image_path: str) -> bool:
+def create_account(username: str, keyword_info: [str], image_path: str, keyword_inorder: bool) -> bool:
     acc = Account(username, keyword_info)
-
+    acc.keydown_is_inorder(keyword_inorder)  # true or false
     acc_added, acc = database.add_account(acc)
 
     img_added, img = database.add_image_entry(image_path, acc, acc.get_username())
@@ -154,7 +154,6 @@ def get_account(username):
 
 
 def check_if_credential_match(username: str, keyword_info: {}) -> bool:
-
     account = database.get_account(username)
 
     return account.match(keyword_info)

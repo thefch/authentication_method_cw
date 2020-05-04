@@ -1,5 +1,5 @@
-<!DOCTYPE html>
-<html>
+{% extends 'base.html' %}
+{% block body_content %}
 <head>
     <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
     <link type="text/css" rel="stylesheet" href="{{ url_for('static', filename='stylesheets/login-stylesheet.css') }}"/>
@@ -8,14 +8,6 @@
 </head>
 
 <h1 style="text-align: center">Login Page</h1>
-<body>
-    {% if msg %}
-        <div class="alert alert-warning page-alert" id="error-msg">
-            <button type="button" class="close"><span aria-hidden="true">×</span></button>
-            {{ msg }}
-        </div>
-
-    {% endif %}
 
     <form method="POST" action="/find_user">
         <div  id="enter-usr-box">
@@ -27,6 +19,6 @@
     </form>
 
 
-</body>
 
-</html>
+
+{% endblock %}
