@@ -42,16 +42,53 @@
         </div>
 
     </div>
+
+    <div id="password-container">
+        <table id="keywords-tb" >
+            <tr>
+                <td>
+                    <button class="show-hide-btn" type="button" onclick="toggle_keyword(this)" id="grid-keyword-btn" value="False">
+                        <img src="https://img.icons8.com/ios-filled/50/000000/show-password.png"/>
+                    </button>
+                    <label for="grid-keyword">Grid Keyword</label>
+                </td>
+                <td>
+                    <input type="password" id="grid-keyword" value="" readonly>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <button class="show-hide-btn" type="button" onclick="toggle_keyword(this)" id="keydown-keyword-btn" value="False">
+                        <img src="https://img.icons8.com/ios-filled/50/000000/show-password.png"/>
+                    </button>
+                    <label for="keydown-keyword">Keydown Keyword</label>
+                </td>
+                <td>
+                    <input type="password" id="keydown-keyword" value="" readonly>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <button class="show-hide-btn" type="button"  onclick="toggle_keyword(this)" id="entered-keys-btn" value="False">
+                        <img src="https://img.icons8.com/ios-filled/50/000000/show-password.png"/>
+                    </button>
+                    <label for="entered-keys">Entered Keys</label>
+                </td>
+                <td>
+                    <input type="password" id="entered-keys" value="" readonly>
+                </td>
+            </tr>
+        </table>
+
+    </div>
+
 </form>
-
-<br>
-
     <div id="grid-container" style="display: table">
 
-        <img id="point1" src="https://img.icons8.com/color/48/000000/1-circle-c--v1.png"/>
-        <img id="point2" src="https://img.icons8.com/color/48/000000/2-circle-c--v1.png"/>
-        <img id="point3" src="https://img.icons8.com/color/48/000000/3-circle-c--v1.png"/>
-        <img id="point4" src="https://img.icons8.com/color/48/000000/4-circle-c--v1.png"/>
+        <img class="point-indicator" id="point1" src="https://img.icons8.com/color/48/000000/1-circle-c--v1.png"/>
+        <img class="point-indicator" id="point2" src="https://img.icons8.com/color/48/000000/2-circle-c--v1.png"/>
+        <img class="point-indicator" id="point3" src="https://img.icons8.com/color/48/000000/3-circle-c--v1.png"/>
+        <img class="point-indicator" id="point4" src="https://img.icons8.com/color/48/000000/4-circle-c--v1.png"/>
 
         <img src="../static/loading.gif" id="loading-gif">
 
@@ -59,47 +96,6 @@
         <table class="grid" id="grid-id"></table>
 
     </div>
-
-<div class="password-container">
-    <table id="keywords-tb" >
-        <tr>
-            <td>
-                <button class="show-hide-btn" type="button" onclick="toggle_keyword(this)" id="grid-keyword-btn" value="False">
-                    <img src="https://img.icons8.com/ios-filled/50/000000/show-password.png"/>
-                </button>
-                <label for="grid-keyword">Grid Keyword</label>
-            </td>
-            <td>
-                <input type="password" id="grid-keyword" value="" readonly>
-            </td>
-        </tr>
-        <tr>
-            <td>
-                <button class="show-hide-btn" type="button" onclick="toggle_keyword(this)" id="keydown-keyword-btn" value="False">
-                    <img src="https://img.icons8.com/ios-filled/50/000000/show-password.png"/>
-                </button>
-                <label for="keydown-keyword">Keydown Keyword</label>
-            </td>
-            <td>
-                <input type="password" id="keydown-keyword" value="" readonly>
-            </td>
-        </tr>
-        <tr>
-            <td>
-                <button class="show-hide-btn" type="button"  onclick="toggle_keyword(this)" id="entered-keys-btn" value="False">
-                    <img src="https://img.icons8.com/ios-filled/50/000000/show-password.png"/>
-                </button>
-                <label for="entered-keys">Entered Keys</label>
-            </td>
-            <td>
-                <input type="password" id="entered-keys" value="" readonly>
-            </td>
-        </tr>
-    </table>
-
-</div>
-
-
 
 </body>
 
@@ -154,39 +150,38 @@
     $(document).ready(function(){
         $(document).mousemove(function(){
             if($("#point1:hover").length !== 0){
-                peekPoint(0);
+                peekPoint(0,'point1');
             } else{
-                resetPoint(0);
+                resetPoint(0,'point1');
             }
 
             if($("#point2:hover").length !== 0){
-                peekPoint(1);
+                peekPoint(1,'point2');
             } else{
-                resetPoint(1);
+                resetPoint(1,'point2');
             }
 
             if($("#point3:hover").length !== 0){
-                peekPoint(2);
+                peekPoint(2,'point3');
             } else{
-                resetPoint(2);
+                resetPoint(2,'point3');
             }
 
             if($("#point4:hover").length !== 0){
-                peekPoint(3);
+                peekPoint(3,'#point4');
             } else{
-                resetPoint(3);
+                resetPoint(3,'#point4');
             }
-
+            updatePointIcons();
         });
 
     });
 </script>
 
-
-
-
-
 <style>
+    .point-indicator{
+        opacity: 0.5;
+    }
     .show-hide-btn{
 
         border-radius: 15px;
@@ -194,12 +189,20 @@
     }
     .show-hide-btn img{
         height: 20px;
-        weight: 20px;
+        width: 20px;
         background-color: white;
     }
 
-    #keywords-tb{
+    #password-container{
         width: 60%;
+        position: absolute;
+        top: 100%;
+        right: 5%;
+        margin-left: auto;
+    }
+
+    #keywords-tb{
+
     }
     #keywords-tb tr td input{
         border-radius: 5px;

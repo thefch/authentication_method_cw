@@ -137,13 +137,12 @@ def create_account(username: str, keyword_info: [str], image_path: str, keyword_
     acc.keydown_is_inorder(keyword_inorder)  # true or false
     acc_added, acc = database.add_account(acc)
 
-    img_added, img = database.add_image_entry(image_path, acc, acc.get_username())
+    img_added = False
+    if acc_added:
+        img_added, img = database.add_image_entry(image_path, acc, acc.get_username())
 
     if acc_added and img_added:
         return True
-
-    #   TODO:
-    #       implement account population
 
     return False
 

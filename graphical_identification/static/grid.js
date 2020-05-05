@@ -118,18 +118,10 @@ function updatePoint(el,method,i){
     if (method==='remove'){
         el.className = '';
         setPoint(method, i);
-        // points[numberOfPointsSelected] = null;
-        // numberOfPointsSelected--;
-        //console.log(i,' unclicked');
-    }else{
-        // console.log(numberOfPointsSelected);
-        //if (numberOfPointsSelected < MAX_NUM_POINTS) {
+    }else{//add
+
         el.className = 'clicked';
         setPoint(method, i);
-        // points[numberOfPointsSelected] = i;
-        // numberOfPointsSelected++;
-        //}
-        //console.log(i,' clicked');
     }
 }
 
@@ -166,10 +158,7 @@ function setPoint(method,value){
 
 function resetPoint(pointNum){
     let cell = findCell(pointNum);
-    //console.log(cell);
     if (cell){
-        // console.log('cell:',cell);
-        // console.log('cell:',cell.children[0]);
         cell.children[0].style.backgroundColor = 'grey';
     }
 }
@@ -177,11 +166,8 @@ function resetPoint(pointNum){
 function peekPoint(pointNum){
 
     let cell = findCell(pointNum);
-    // console.log(cell);
     if (cell){
-        // console.log('cell:',cell);
-        // console.log('cell:',cell.children[0]);
-        cell.children[0].style.backgroundColor = 'blue';
+        cell.children[0].style.backgroundColor = '#ffe600';
     }
 }
 
@@ -224,8 +210,15 @@ function initArray() {
     return arr;
 }
 
-function showImportImage(){
+function updatePointIcons(){
 
-    document.getElementById('grid').style.display = 'block';
+    for (let i=0;i<points.length;i++){
+        let id = 'point'+(i+1);
+        if(points[i] != null){
+            document.getElementById(id).style.opacity = '1';
+        }else{
+            document.getElementById(id).style.opacity = '0.5';
+        }
+    }
+
 }
-

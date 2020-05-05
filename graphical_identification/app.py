@@ -22,6 +22,7 @@ DEFAULT_IMAGES = get_default_images(DEFAULT_IMAGES_PATH)
 
 isrunning = True
 
+
 def check_file_extension(file) -> [bool, str]:
     parts = file.filename.split('.')
     ext = parts[-1]
@@ -32,7 +33,6 @@ def check_file_extension(file) -> [bool, str]:
     return valid, ext
 
 
-# TODO
 @app.route('/login_pattern')
 def login_pattern():
     username_on_hold = ''
@@ -48,9 +48,6 @@ def login_pattern():
         account = get_account(username_on_hold)
         print(' ACCOUNT ON HOLD:', account)
         image_path = account.get_image().get_local_path(app.config['UPLOAD_FOLDER'])
-
-        # print('image path:', image_path)
-        # print('name:', account.get_image().get_name())
 
         rsp = make_response(
             render_template('login_pattern.html', username_on_hold=username_on_hold, image_path=image_path))
@@ -100,7 +97,7 @@ def validate_login():
         print('entered keys:', entered_keys)
         print('username on hold:', username_on_hold)
     except Exception as e:
-        #raise e
+        # raise e
         print('In validate login, retrieving data')
         print(e)
 
@@ -244,18 +241,20 @@ def validate_register():
         keydown_keyword = request.form["keydown_keyword"]
         entered_keyword = request.form["entered_keyword"]
         keydown_inorder = request.form["keydown_in_order"]
-        print('grid kwrd:', grid_keyword)
-        print('keydown kwrd:', keydown_keyword)
-        print('entered kwrd:', entered_keyword)
-        print('keydown in order:',keydown_inorder)
+
     except Exception as e:
         print(e)
 
+    print('grid kwrd:', grid_keyword)
+    print('keydown kwrd:', keydown_keyword)
+    print('entered kwrd:', entered_keyword)
+    print('keydown in order:', keydown_inorder)
+
     if keydown_inorder is None:
-        keydown_inorder =False
+        keydown_inorder = False
     else:
         keydown_inorder = bool(keydown_inorder)
-    print('KEYDOWN IN ORDEr:',keydown_inorder)
+    print('KEYDOWN IN ORDEr:', keydown_inorder)
 
     try:
         username = request.form['username_box']
@@ -276,10 +275,14 @@ def validate_register():
             'entered_keys': combination,
             'final_keyword': final_keyword}
 
-        create_account(username, keyword_info, image_path, keydown_inorder)
-        # rsp = make_response(render_template("login.html", img_path=image_path))
-        msg="Account successfully created: "+username
-        rsp = make_response(redirect(url_for("index",msg=msg)))
+        created = create_account(username, keyword_info, image_path, keydown_inorder)
+        if created:
+            # rsp = make_response(render_template("login.html", img_path=image_path))
+            msg = "Account successfully created: " + username
+            rsp = make_response(redirect(url_for("index", msg=msg)))
+        else:
+            msg = "Account with this username already exists!"
+            rsp = make_response(redirect(url_for("register", msg=msg)))
     else:
         msg = 'Account creation failed. Make sure to add a username and points(max 4) on the image!'
         rsp = make_response(redirect(url_for('register', msg=msg, images_paths=DEFAULT_IMAGES)))

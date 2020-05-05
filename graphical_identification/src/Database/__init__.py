@@ -138,6 +138,9 @@ class Database:
 
     # add an account entry in the account table
     def add_account(self, account: Account) -> [bool, Account]:
+        if self.account_exists(account.get_username()):
+            return False,None
+
         con = self.connect()
         cur = con.cursor()
 
