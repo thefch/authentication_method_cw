@@ -104,3 +104,23 @@ function remove(value, arr,type){
         return el != null;
     });
 }
+
+function toggle_keyword(elem) {
+
+    if (elem.value === "True") {
+        elem.value = "False";
+        elem.style.opacity = '1';
+    } else {
+        elem.value = "True";
+        elem.style.opacity = '0.5';
+    }
+
+    if (elem.id === "grid-keyword-btn") {
+        document.getElementById('grid-keyword').type    = elem.value === "True" ? "text" : "password";
+    } else if (elem.id === "keydown-keyword-btn") {
+        document.getElementById('keydown-keyword').type = elem.value === "True" ? "text" : "password";
+    }
+    else if (elem.id === "entered-keys-btn") {
+        document.getElementById('entered-keys').type    = elem.value === "True" ? "text" : "password";
+    }
+}
