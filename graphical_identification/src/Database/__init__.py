@@ -24,7 +24,8 @@ class Database:
             else:
                 print("Could not connect to Database: NOT FOUND!")
         except Error as e:
-            print(e)
+            raise e
+            # print(e)
 
         return conn
 
@@ -96,7 +97,7 @@ class Database:
                 keyword_info = {
                     'grid_keyword': clicks,
                     'keydown_keyword': keydowns,
-                    'entered_keyword': comb,
+                    'entered_keys': comb,
                     'final_keyword': dic}
                 account = Account(acc[1], keyword_info, acc[0])
                 if acc[7]:
@@ -143,7 +144,7 @@ class Database:
         username = account.get_username()
         final_keyword = json.dumps(account.get_formatted_combination())
         # entered_keyword = account.get_keyword_info('entered_keyword')
-        entered_keyword = json.dumps(account.get_keyword_info('entered_keyword'))
+        entered_keys = json.dumps(account.get_keyword_info('entered_keys'))
         # keydown_keyword = account.get_keyword_info('keydown_keyword')
         keydown_keyword = json.dumps(account.get_keyword_info('keydown_keyword'))
         # grid_keyword = account.get_keyword_info('grid_keyword')
@@ -151,10 +152,10 @@ class Database:
 
         keydown_inorder = account.get_keydown_in_order()
         email = account.get_email()
-        query = """INSERT INTO accounts_tb ('username','keyword','email','entered_keyword','keydown_keyword','grid_keyword','keydown_inorder')
+        query = """INSERT INTO accounts_tb ('username','keyword','email','entered_keys','keydown_keyword','grid_keyword','keydown_inorder')
                     VALUES(?,?,?,?,?,?,?);"""
 
-        args = (username, final_keyword, email, entered_keyword, keydown_keyword, grid_keyword,keydown_inorder)
+        args = (username, final_keyword, email, entered_keys, keydown_keyword, grid_keyword,keydown_inorder)
 
         updated_acc = account
         successful = False
@@ -168,7 +169,8 @@ class Database:
             successful = True
             print('Account created: ', updated_acc)
         except Exception as err:
-            print(err)
+            raise err
+            # print(err)
 
         cur.close()
         con.close()
@@ -272,7 +274,7 @@ class Database:
                     keyword_info = {
                         'grid_keyword': acc[6],
                         'keydown_keyword': acc[5],
-                        'entered_keyword': acc[4],
+                        'entered_keys': acc[4],
                         'final_keyword': acc[2]}
                     account = Account(acc[1], keyword_info, acc[0])
                     accounts.append(account)
@@ -336,7 +338,8 @@ class Database:
 
             successful = True
         except Exception as err:
-            print(err)
+            raise err
+            # print(err)
 
         cur.close()
         con.close()

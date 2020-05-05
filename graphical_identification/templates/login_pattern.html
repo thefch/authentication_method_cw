@@ -24,7 +24,7 @@
                 <input type="hidden" name="username" value="{{ username_on_hold }}">
                 <input type="hidden" id="grid_keyword" name="grid_keyword">
                 <input type="hidden" id="keydown_keyword" name="keydown_keyword">
-                <input type="hidden" id="entered_keyword" name="entered_keyword">
+                <input type="hidden" id="entered_keys" name="entered_keys">
         </form>
 
         <div id="points-container">
@@ -44,14 +44,42 @@
 </div>
 
 <div class="password-container">
-    <label for="grid-keyword">Grid Keyword</label>
-    <h3 id="grid-keyword">Grid-keyword:</h3>
+    <table id="keywords-tb" >
+        <tr>
+            <td>
+                <button>X</button>
+            </td>
+            <td>
+                <label for="grid-keyword">Grid Keyword</label>
+            </td>
+            <td>
+                <input type="text" id="grid-keyword" value="" readonly>
+            </td>
+        </tr>
+        <tr>
+            <td>
+                <button>X</button>
+            </td>
+            <td>
+                <label for="keydown-keyword">Keydown Keyword</label>
+            </td>
+            <td>
+                <input type="text" id="keydown-keyword" value="" readonly>
+            </td>
+        </tr>
+        <tr>
+            <td>
+                <button>X</button>
+            </td>
+            <td>
+                <label for="entered-keys">Entered Keys</label>
+            </td>
+            <td>
+                <input type="text" id="entered-keys" value="" readonly>
+            </td>
+        </tr>
+    </table>
 
-    <label for="keydown-keyword">Keydown Keyword</label>
-    <h3 id="keydown-keyword">Keydown-keyword:</h3>
-
-    <label for="entered-keyword">Entered Combination</label>
-    <h3 id="entered-keys">Entered:</h3>
 </div>
 
 
@@ -59,9 +87,9 @@
 
 <script>
     function initValues(elem){
-        document.getElementById('grid_keyword').value = document.getElementById('grid-keyword').textContent;
-        document.getElementById('keydown_keyword').value = document.getElementById('keydown-keyword').textContent;
-        document.getElementById('entered_keyword').value = document.getElementById('entered-keys').textContent;
+        document.getElementById('grid_keyword').value = document.getElementById('grid-keyword').value;
+        document.getElementById('keydown_keyword').value = document.getElementById('keydown-keyword').value;
+        document.getElementById('entered_keys').value = document.getElementById('entered-keys').value;
     }
 
 </script>
@@ -106,6 +134,15 @@
 </script>
 
 <style>
+    #keywords-tb{
+        width: 60%;
+    }
+    #keywords-tb tr td input{
+        border-radius: 5px;
+        background: white;
+        border: 1px solid gray;
+    }
+
     #parent{
         margin: auto;
         width: 810px;

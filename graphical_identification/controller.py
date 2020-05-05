@@ -22,42 +22,42 @@ def filter_data(combination: [str], keys: [str], clicks: [str]):
     combination = combination.split('/')
     new_combination = [c for c in combination if c.strip() is not '']
 
-    keys = keys.split('/')
-    new_keys = [k for k in keys if k.strip() is not '']
+    # keys = keys.split('/')
+    # new_keys = [k for k in keys if k.strip() is not '']
+    new_keys = keys
 
     clicks = clicks.split('/')
     new_clicks = [int(c) for c in clicks if c.strip() is not '']
     return new_combination, new_keys, new_clicks
 
 
-def validate_keyword(entered_keyword: str, keydown_keyword: str, grid_keyword: str) -> [bool, str, str, str]:
+def validate_keyword(entered_keys: str, keydown_keyword: str, grid_keyword: str) -> [bool, str, str, str]:
     # the index of the text value from the grid page
-    start_full = entered_keyword.find(':') + 1
-    start_keys = keydown_keyword.find(':') + 1
-    start_clicks = grid_keyword.find(':') + 1
+    start_full = 0
+    start_keys = 0
+    start_clicks = 0
 
     is_valid = False
     keys = []
     combination = []
     clicks = []
 
-    if start_clicks is -1 or start_keys is -1 or start_full is -1:
-        # ERROR
+    # if start_clicks is -1 or start_keys is -1 or start_full is -1:
+    #     # ERROR
+    #     is_valid = False
+    # keys = keydown_keyword[start_keys:]
+    # combination = entered_keyword[start_full:]
+    # clicks = grid_keyword[start_clicks:]
+    print('grid kwrd:', len(grid_keyword), '  entered:', len(entered_keys))
+    combination, keys, clicks = filter_data(entered_keys, keydown_keyword, grid_keyword)
+
+    if len(combination) == 0 or len(clicks) == 0 or len(clicks) < MAX_POINTS:
         is_valid = False
     else:
-        keys = keydown_keyword[start_keys:]
-        combination = entered_keyword[start_full:]
-        clicks = grid_keyword[start_clicks:]
-        print('grid kwrd:', len(clicks), '  entered:', len(combination))
-        combination, keys, clicks = filter_data(combination, keys, clicks)
-
-        if len(combination) == 0 or len(clicks) == 0 or len(clicks) < MAX_POINTS:
-            is_valid = False
-        else:
-            print('keys:', keys)
-            print('clicks', clicks)
-            print('combination:', combination)
-            is_valid = True
+        print('keys:', keys)
+        print('clicks', clicks)
+        print('combination:', combination)
+        is_valid = True
 
     return is_valid, combination, keys, clicks
 
@@ -153,7 +153,7 @@ def get_account(username):
     return acc
 
 
-def check_if_credential_match(username: str, keyword_info: {}) -> bool:
+def authenticate_account(username: str, keyword_info: {}) -> bool:
     account = database.get_account(username)
 
     return account.match(keyword_info)

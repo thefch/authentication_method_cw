@@ -5,7 +5,7 @@ from flask import Flask, render_template, make_response, request, url_for, redir
 from werkzeug.utils import secure_filename
 
 from controller import validate_keyword, set_combination, check_default_images, get_default_images, check_image_size, \
-    create_account, get_account, check_if_credential_match
+    create_account, get_account, authenticate_account
 
 app = Flask(__name__)
 
@@ -88,32 +88,34 @@ def find_user():
 def validate_login():
     grid_keyword = ''
     keydown_keyword = ''
-    entered_keyword = ''
+    entered_keys = ''
     username_on_hold = ''
     try:
         grid_keyword = request.form["grid_keyword"]
         keydown_keyword = request.form["keydown_keyword"]
-        entered_keyword = request.form["entered_keyword"]
+        entered_keys = request.form["entered_keys"]
         username_on_hold = request.form["username"]
         print('grid kwrd:', grid_keyword)
         print('keydown kwrd:', keydown_keyword)
-        print('entered kwrd:', entered_keyword)
+        print('entered keys:', entered_keys)
         print('username on hold:', username_on_hold)
     except Exception as e:
+        #raise e
+        print('In validate login, retrieving data')
         print(e)
 
-    is_valid, combination, keys, clicks = validate_keyword(entered_keyword, keydown_keyword, grid_keyword)
+    is_valid, combination, keys, clicks = validate_keyword(entered_keys, keydown_keyword, grid_keyword)
     if is_valid:
         final_keyword = set_combination(combination, keys, clicks)
         keyword_info = {
             'grid_keyword': clicks,
             'keydown_keyword': keys,
-            'entered_keyword': combination,
+            'entered_keys': combination,
             'final_keyword': final_keyword}
 
         if username_on_hold.strip() is not '':
-            matches = check_if_credential_match(username_on_hold, keyword_info)
-            if matches:
+
+            if authenticate_account(username_on_hold, keyword_info):
                 session['account'] = username_on_hold
                 msg = "Login Successful :" + username_on_hold
                 rsp = make_response(redirect(url_for('index', msg=msg, username=username_on_hold)))
@@ -271,7 +273,7 @@ def validate_register():
         keyword_info = {
             'grid_keyword': clicks,
             'keydown_keyword': keys,
-            'entered_keyword': combination,
+            'entered_keys': combination,
             'final_keyword': final_keyword}
 
         create_account(username, keyword_info, image_path, keydown_inorder)

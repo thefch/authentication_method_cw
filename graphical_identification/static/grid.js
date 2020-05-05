@@ -32,7 +32,7 @@ window.onload = () => {
             span.style.display = span.style.display === 'none' ? 'block' : 'none';*/
         }else{
             if(isAlreadySelected(el)) {
-                console.log('cell:', i, '  is already selected');
+                // console.log('cell:', i, '  is already selected');
                 updatePoint(el,'remove',i);
 
 
@@ -47,8 +47,8 @@ window.onload = () => {
         hasEnough = numberOfPointsSelected === MAX_NUM_POINTS;
 
         checkIfCredentialReady(el);
-        console.log('has enough? ',hasEnough);
-        console.log('number of points:', numberOfPointsSelected);
+        //console.log('has enough? ',hasEnough);
+        //console.log('number of points:', numberOfPointsSelected);
     });
 
 
@@ -98,22 +98,21 @@ window.onload = () => {
 
 
 function checkIfCredentialReady(elem) {
-    console.log('has?, ',window.hasEnough);
+    //console.log('has?, ',window.hasEnough);
     let icon = document.getElementById('help-icon');
 
     if (!window.hasEnough || elem.value === '') {
-        console.log('button DISABLED');
+        //console.log('button DISABLED');
         document.getElementById('submit-btn').disabled = 'disabled';
         //icon.style.border='3px solid red';
 
     } else if(window.hasEnough && elem.value !== '') {
-        console.log('button ENABLED  ');
+      //  console.log('button ENABLED  ');
         document.getElementById('submit-btn').disabled = '';
         //icon.style.border='';
     }
-    console.log('here:',window.numberOfPointsSelected );
+    //console.log('here:',window.numberOfPointsSelected );
 }
-
 
 function updatePoint(el,method,i){
     if (method==='remove'){
@@ -121,7 +120,7 @@ function updatePoint(el,method,i){
         setPoint(method, i);
         // points[numberOfPointsSelected] = null;
         // numberOfPointsSelected--;
-        console.log(i,' unclicked');
+        //console.log(i,' unclicked');
     }else{
         // console.log(numberOfPointsSelected);
         //if (numberOfPointsSelected < MAX_NUM_POINTS) {
@@ -130,7 +129,7 @@ function updatePoint(el,method,i){
         // points[numberOfPointsSelected] = i;
         // numberOfPointsSelected++;
         //}
-        console.log(i,' clicked');
+        //console.log(i,' clicked');
     }
 }
 

@@ -29,7 +29,7 @@
 
         <input type="hidden" id="grid_keyword" name="grid_keyword">
         <input type="hidden" id="keydown_keyword" name="keydown_keyword">
-        <input type="hidden" id="entered_keyword" name="entered_keyword">
+        <input type="hidden" id="entered_keys" name="entered_keyword">
 
 
         <input disabled type="submit" id="submit-btn" value="Submit" onclick=initValues(this);>
@@ -89,10 +89,10 @@
                 <button>X</button>
             </td>
             <td>
-                <label for="entered-keyword">Entered Keyword</label>
+                <label for="entered-keys">Entered Keys</label>
             </td>
             <td>
-                <input type="text" id="entered-keyword" value="" readonly>
+                <input type="text" id="entered-keys" value="" readonly>
             </td>
         </tr>
     </table>
@@ -105,18 +105,18 @@
 
 <script>
     function initValues(elem){
-        document.getElementById('grid_keyword').value = document.getElementById('grid-keyword').textContent;
-        document.getElementById('keydown_keyword').value = document.getElementById('keydown-keyword').textContent;
-        document.getElementById('entered_keyword').value = document.getElementById('entered-keys').textContent;
+        document.getElementById('grid_keyword').value = document.getElementById('grid-keyword').value;
+        document.getElementById('keydown_keyword').value = document.getElementById('keydown-keyword').value;
+        document.getElementById('entered_keys').value = document.getElementById('entered-keys').value;
     }
 
     function toggle_check(elem) {
         if (elem.value === "False") {
             elem.value = "True";
-            console.log('Toggle to true, ',elem.value);
+           // console.log('Toggle to true, ',elem.value);
         } else if (elem.value === "True") {
             elem.value = "False";
-            console.log('Toggle to false,  ',elem.value);
+            //console.log('Toggle to false,  ',elem.value);
         }
     }
 
@@ -132,18 +132,18 @@
         });
         if (flag) {
             window.usernameBoxClicked = true;
-            console.log("Inside")
+           // console.log("Inside")
         } else {
             window.usernameBoxClicked = false;
-            console.log("Outside")
+           // console.log("Outside")
         }
     });
 
    document.addEventListener('keydown', function (event) {
         if(window.usernameBoxClicked){
-            console.log('username box clicked');
+            //console.log('username box clicked');
         }else if (!window.usernameBoxClicked) {
-            console.log('username box NOT clicked');
+            //console.log('username box NOT clicked');
             update_keyword('key-elem', 'keydown', event.key);
         }
     }, true);

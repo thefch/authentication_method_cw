@@ -12,7 +12,7 @@ class Account:
         # def __init__(self, username_: str, keyword_info_: [str], image_id_: int, email_: str = None, id_: int = None):
         self.__username = username_
         self.__final_keyword = keyword_info_['final_keyword']
-        self.__entered_keyword = keyword_info_['entered_keyword']
+        self.__entered_keys = keyword_info_['entered_keys']
         self.__keydown_keyword = keyword_info_['keydown_keyword']
         self.__grid_keydown = keyword_info_['grid_keyword']
         self.__keyword_info = keyword_info_
