@@ -111,6 +111,9 @@ class Account:
         clicks = info['grid_keyword']
         keydowns = info['keydown_keyword']
 
+        print('clicks:', clicks, ' | ', self.__grid_keydown)
+        print('keydowns:', keydowns, ' | ', self.__keydown_keyword)
+
         if self.__keydown_in_order:
             if self.__clicks_match_no_order(clicks):
                 if self.__keydowns_match_in_order(keydowns):
